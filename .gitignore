@@ -1,0 +1,9 @@
+php_test_code.php
+.envrc
+cookies.txt
+/RUNNING_PID
+/logs/
+/project/*-shim.sbt
+/project/project/
+/project/target/
+/target/
