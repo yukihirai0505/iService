@@ -94,7 +94,8 @@ object iPost extends App {
     Http(request).map { resp =>
       val response = resp.getResponseBody
       println(response)
-      cookies = resp.getCookies.toList
+      val csrftoken = resp.getCookies.filter(v => v.getName.equals("csrftoken")).head
+      cookies :+ csrftoken
       Json.parse(response).validate[T] match {
         case JsError(e) => throw new Exception(e.toString())
         case JsSuccess(value, _) => value match {
