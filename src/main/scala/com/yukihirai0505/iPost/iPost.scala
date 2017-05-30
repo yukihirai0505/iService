@@ -83,7 +83,7 @@ class iPost(username: String, password: String) {
     else addCookies(cookies.tail, req.addCookie(cookies.head))
   }
 
-  def createSingedBody(json: String) = {
+  def createSingedBody(json: String): String = {
     s"ig_sig_key_version=4&signed_body=${HashUtil.hashHmac(json, hashHmacKey)}.${URLEncoder.encode(json, "UTF-8").replaceAll("\\+", "%20").replaceAll("\\-", "%2D")}"
   }
 

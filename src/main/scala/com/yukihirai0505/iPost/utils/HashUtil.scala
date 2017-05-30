@@ -1,4 +1,4 @@
-package utils
+package com.yukihirai0505.iPost.utils
 
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
