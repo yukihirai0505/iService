@@ -21,9 +21,9 @@ class iPostSpec extends FlatSpec with Matchers {
   val iPost = new iPost(username, password)
 
   "UploadMedia" should "return a Some[MediaFeed]" in {
-    Await.result(iPost.login(), Duration.Inf)
-    val mediaId = Await.result(iPost.mediaUpload(new File("yukihirai.jpeg")), Duration.Inf).getOrElse("")
-    Await.result(iPost.mediaConfigure(mediaId, "投稿テスト"), Duration.Inf)
+    val cookies = Await.result(iPost.login(), Duration.Inf)
+    val mediaId = Await.result(iPost.mediaUpload(new File("yukihirai.jpeg"), cookies), Duration.Inf).getOrElse("")
+    Await.result(iPost.mediaConfigure(mediaId, "投稿テスト", cookies), Duration.Inf)
     true should ===(true)
   }
 
