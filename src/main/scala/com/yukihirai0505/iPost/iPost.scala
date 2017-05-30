@@ -24,9 +24,8 @@ class iPost(username: String, password: String) {
   val deviceId = s"android-$uuid"
 
   def login(): Future[Option[String]] = {
-    val params = s"""{"username":"$username","password":"$password","guid":"$uuid","device_id":"$deviceId"}"""
-    val body = s"ig_sig_key_version=4&signed_body=${hashHmac(params, "b4a23f5e39b5929e0666ac5de94c89d1618a2916")}.${URLEncoder.encode(params, "UTF-8").replaceAll("\\+", "%20").replaceAll("\\-", "%2D")}"
-    send[String](createRequest(Methods.ACCOUNTS_LOGIN).setBody(body))
+    val json = s"""{"username":"$username","password":"$password","guid":"$uuid","device_id":"$deviceId"}"""
+    send[String](createRequest(Methods.ACCOUNTS_LOGIN).setBody(createSingedBody(json)))
   }
 
   def mediaUpload(postImage: File): Future[Option[String]] = {
@@ -43,20 +42,9 @@ class iPost(username: String, password: String) {
   }
 
   def mediaConfigure(mediaId: String, caption: String): Future[Option[String]] = {
-    val params = s"""{"guid":"$uuid","device_id":"$deviceId","device_timestamp":"$timestamp","media_id":"$mediaId","caption":"$caption","source_type":"5","filter_type":"0","extra":"{}"}"""
-    val body = s"ig_sig_key_version=4&signed_body=${hashHmac(params, "b4a23f5e39b5929e0666ac5de94c89d1618a2916")}.${URLEncoder.encode(params, "UTF-8").replaceAll("\\+", "%20").replaceAll("\\-", "%2D")}"
-    val request: Req = addCookies(cookies, createRequest(Methods.MEDIA_CONFIGURE).setBody(body))
+    val json = s"""{"guid":"$uuid","device_id":"$deviceId","device_timestamp":"$timestamp","media_id":"$mediaId","caption":"$caption","source_type":"5","filter_type":"0","extra":"{}"}"""
+    val request: Req = addCookies(cookies, createRequest(Methods.MEDIA_CONFIGURE).setBody(createSingedBody(json)))
     send[String](request)
-  }
-
-  def hashHmac(s: String, secret: String): String = {
-    val sha256_HMAC = Mac.getInstance("HmacSHA256")
-    sha256_HMAC.init(new SecretKeySpec(secret.getBytes("UTF-8"), "HmacSHA256"))
-    sha256_HMAC.doFinal(s.getBytes("UTF-8")).map(char => f"$char%02x").mkString
-  }
-
-  def timestamp: String = {
-    (System.currentTimeMillis / 1000).toString
   }
 
   def send[T](request: Req)(implicit r: Reads[T]): Future[Option[T]] = {
@@ -94,6 +82,20 @@ class iPost(username: String, password: String) {
   def addCookies(cookies: List[Cookie], req: Req): Req = {
     if (cookies.isEmpty) req
     else addCookies(cookies.tail, req.addCookie(cookies.head))
+  }
+
+  def createSingedBody(json: String) = {
+    s"ig_sig_key_version=4&signed_body=${hashHmac(json, "b4a23f5e39b5929e0666ac5de94c89d1618a2916")}.${URLEncoder.encode(json, "UTF-8").replaceAll("\\+", "%20").replaceAll("\\-", "%2D")}"
+  }
+
+  def hashHmac(s: String, secret: String): String = {
+    val sha256_HMAC = Mac.getInstance("HmacSHA256")
+    sha256_HMAC.init(new SecretKeySpec(secret.getBytes("UTF-8"), "HmacSHA256"))
+    sha256_HMAC.doFinal(s.getBytes("UTF-8")).map(char => f"$char%02x").mkString
+  }
+
+  def timestamp: String = {
+    (System.currentTimeMillis / 1000).toString
   }
 
 }
