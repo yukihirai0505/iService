@@ -11,6 +11,7 @@ import com.ning.http.client.cookie.Cookie
 import com.ning.http.client.multipart.{FilePart, StringPart}
 import com.yukihirai0505.com.scala.constants.Verbs
 import com.yukihirai0505.iPost.constans.Methods
+import com.yukihirai0505.iPost.models.{Login, MediaConfigure}
 import com.yukihirai0505.iPost.responses.MediaUpload
 import dispatch.{Future, Http, Req, url}
 
@@ -24,7 +25,7 @@ class iPost(username: String, password: String) {
   val deviceId = s"android-$uuid"
 
   def login(): Future[Option[String]] = {
-    val json = s"""{"username":"$username","password":"$password","guid":"$uuid","device_id":"$deviceId"}"""
+    val json = Json.prettyPrint(Json.toJson(Login(username, password, uuid, deviceId)))
     send[String](createRequest(Methods.ACCOUNTS_LOGIN).setBody(createSingedBody(json)))
   }
 
@@ -42,7 +43,7 @@ class iPost(username: String, password: String) {
   }
 
   def mediaConfigure(mediaId: String, caption: String): Future[Option[String]] = {
-    val json = s"""{"guid":"$uuid","device_id":"$deviceId","device_timestamp":"$timestamp","media_id":"$mediaId","caption":"$caption","source_type":"5","filter_type":"0","extra":"{}"}"""
+    val json = Json.prettyPrint(Json.toJson(MediaConfigure(uuid, deviceId, timestamp, mediaId, caption)))
     val request: Req = addCookies(cookies, createRequest(Methods.MEDIA_CONFIGURE).setBody(createSingedBody(json)))
     send[String](request)
   }

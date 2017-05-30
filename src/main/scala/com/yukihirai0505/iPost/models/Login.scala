@@ -1,11 +1,11 @@
 package com.yukihirai0505.iPost.models
 
-case class Login(mediaId: String, status: String)
+case class Login(username: String, password: String, guid: String, deviceId: String)
 
 import play.api.libs.json.Json
 
 import com.github.tototoshi.play.json.JsonNaming
 
-object MediaUpload {
-  implicit val MediaUploadFormat = JsonNaming.snakecase(Json.format[Login])
+object Login {
+  implicit val LoginFormat = JsonNaming.snakecase(Json.format[Login])
 }
