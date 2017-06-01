@@ -2,10 +2,9 @@ package com.yukihirai0505.iPost
 
 import com.ning.http.client.cookie.Cookie
 import com.yukihirai0505.com.scala.constants.Verbs
-import com.yukihirai0505.iPost.constans.Constants.IOS_USER_AGENT
 import com.yukihirai0505.iPost.constans.NaturalMethods
 import com.yukihirai0505.iPost.utils.{HashUtil, ReqUtil}
-import dispatch.{Future, url}
+import dispatch.Future
 
 class iPostNatural(username: String, password: String) {
 
@@ -27,19 +26,21 @@ class iPostNatural(username: String, password: String) {
 
   // TOP Page = Login Page
   def top(): Future[List[Cookie]] = {
-    val req = url(NaturalMethods.TOP)
-      .setMethod(Verbs.GET.label)
-      .addHeader("User-Agent", IOS_USER_AGENT)
+    val req = ReqUtil.getNaturalReq(NaturalMethods.TOP, Verbs.GET)
+    ReqUtil.sendRequest(req)
+  }
+
+  // TODO クッキーつかってusername, password入力してログイン
+  def login(cookies: List[Cookie]): Future[List[Cookie]] = {
+    val body = Map(
+      "username" -> username,
+      "password" -> password
+    )
+    val req = ReqUtil.getNaturalReq(NaturalMethods.ACCOUNTS_LOGIN_AJAX, Verbs.POST, cookies) << body
     ReqUtil.sendRequest(req)
   }
 
   /***
-  // TODO クッキーつかってusername, password入力してログイン
-  def login(): Future[List[Cookie]] = {
-    val json = Json.prettyPrint(Json.toJson(Login(username, password, uuid, deviceId)))
-    sendRequest(ReqUtil.getReq(APIMethods.ACCOUNTS_LOGIN).setBody(createSingedBody(json)))
-  }
-
   // TODO クッキーつかってファイルアップ
   def mediaUpload(postImage: File, cookies: List[Cookie]): Future[Option[String]] = {
     val request: Req = ReqUtil.getReq(APIMethods.MEDIA_UPLOAD, isFormUrlEncoded = false, cookies)
@@ -59,16 +60,6 @@ class iPostNatural(username: String, password: String) {
     sendRequest(request)
   }
 
-  // TODO
-  def sendRequest(request: Req): Future[List[Cookie]] = {
-    Http(request).map { resp =>
-      resp.getCookies.toList
-    }
-  }
-
-  def createSingedBody(json: String): String = {
-    s"ig_sig_key_version=4&signed_body=${HashUtil.hashHmac(json, HASH_HMAC_KEY)}.${URLEncoder.encode(json, UTF8).replaceAll("\\+", "%20").replaceAll("\\-", "%2D")}"
-  }
     */
 
 }
