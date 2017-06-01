@@ -8,14 +8,13 @@ import play.api.libs.json.Json
 import com.ning.http.client.cookie.Cookie
 import com.ning.http.client.multipart.{FilePart, StringPart}
 import com.yukihirai0505.com.scala.Request
+import com.yukihirai0505.iPost.constans.APIMethods
 import com.yukihirai0505.iPost.constans.Constants.{HASH_HMAC_KEY, UTF8}
-import com.yukihirai0505.iPost.constans.Methods
 import com.yukihirai0505.iPost.models.{Login, MediaConfigure}
 import com.yukihirai0505.iPost.responses.MediaUpload
 import com.yukihirai0505.iPost.utils.{HashUtil, ReqUtil}
-import dispatch.{Future, Http, Req}
+import dispatch.{Future, Req}
 
-import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class iPost(username: String, password: String) {
@@ -25,11 +24,11 @@ class iPost(username: String, password: String) {
 
   def login(): Future[List[Cookie]] = {
     val json = Json.prettyPrint(Json.toJson(Login(username, password, uuid, deviceId)))
-    sendRequest(ReqUtil.getReq(Methods.ACCOUNTS_LOGIN).setBody(createSingedBody(json)))
+    ReqUtil.sendRequest(ReqUtil.getApiReq(APIMethods.ACCOUNTS_LOGIN).setBody(createSingedBody(json)))
   }
 
   def mediaUpload(postImage: File, cookies: List[Cookie]): Future[Option[String]] = {
-    val request: Req = ReqUtil.getReq(Methods.MEDIA_UPLOAD, isFormUrlEncoded = false, cookies)
+    val request: Req = ReqUtil.getApiReq(APIMethods.MEDIA_UPLOAD, isFormUrlEncoded = false, cookies)
       .addBodyPart(new FilePart("photo", postImage))
       .addBodyPart(new StringPart("device_timestamp", timestamp))
     Request.send[MediaUpload](request).flatMap {
@@ -41,14 +40,8 @@ class iPost(username: String, password: String) {
 
   def mediaConfigure(mediaId: String, caption: String, cookies: List[Cookie]): Future[List[Cookie]] = {
     val json = Json.prettyPrint(Json.toJson(MediaConfigure(uuid, deviceId, timestamp, mediaId, caption)))
-    val request: Req = ReqUtil.getReq(Methods.MEDIA_CONFIGURE, cookies = cookies).setBody(createSingedBody(json))
-    sendRequest(request)
-  }
-
-  def sendRequest(request: Req): Future[List[Cookie]] = {
-    Http(request).map { resp =>
-      resp.getCookies.toList
-    }
+    val request: Req = ReqUtil.getApiReq(APIMethods.MEDIA_CONFIGURE, cookies = cookies).setBody(createSingedBody(json))
+    ReqUtil.sendRequest(request)
   }
 
   def createSingedBody(json: String): String = {
