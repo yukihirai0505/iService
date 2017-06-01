@@ -24,13 +24,20 @@ class iPostNatural(username: String, password: String) {
     */
 
 
-  // TOP Page = Login Page
+  /***
+    * Access Top page and get cookie
+    * @return
+    */
   def top(): Future[List[Cookie]] = {
     val req = ReqUtil.getNaturalReq(NaturalMethods.TOP, Verbs.GET)
     ReqUtil.sendRequest(req)
   }
 
-  // TODO クッキーつかってusername, password入力してログイン
+  /***
+    * Login with cookie and user info
+    * @param cookies
+    * @return
+    */
   def login(cookies: List[Cookie]): Future[List[Cookie]] = {
     val body = Map(
       "username" -> username,
