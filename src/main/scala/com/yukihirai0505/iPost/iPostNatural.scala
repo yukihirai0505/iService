@@ -47,12 +47,15 @@ class iPostNatural(username: String, password: String) {
     (ReqUtil.sendRequest(req), uploadId)
   }
 
-  /***
-  def mediaConfigure(mediaId: String, caption: String, cookies: List[Cookie]): Future[List[Cookie]] = {
-    val json = Json.prettyPrint(Json.toJson(MediaConfigure(uuid, deviceId, timestamp, mediaId, caption)))
-    val request: Req = ReqUtil.getReq(APIMethods.MEDIA_CONFIGURE, cookies = cookies).setBody(createSingedBody(json))
-    sendRequest(request)
+  def createConfigure(uploadId: String, caption: String, cookies: List[Cookie]): Future[List[Cookie]] = {
+    val body = Map(
+      "upload_id" -> uploadId,
+      "caption" -> caption
+    )
+    val req = ReqUtil.getNaturalReq(NaturalMethods.CREATE_CONFIGURE, cookies, isAjax = true)
+      .addHeader("Content-Type", CONTENT_TYPE)
+      .addHeader("Referer", "https://www.instagram.com/create/details/") << body
+    ReqUtil.sendRequest(req)
   }
-    */
 
 }
