@@ -9,10 +9,13 @@ import com.yukihirai0505.iPost.constans.NaturalMethods
 import com.yukihirai0505.iPost.utils.ReqUtil
 import dispatch.{Future, Req}
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 class iPostNatural(username: String, password: String) {
 
-  /***
+  /**
     * Access Top page and get cookie
+    *
     * @return
     */
   def top(cookies: List[Cookie] = List.empty[Cookie]): Future[List[Cookie]] = {
@@ -20,8 +23,9 @@ class iPostNatural(username: String, password: String) {
     ReqUtil.sendRequest(req)
   }
 
-  /***
+  /**
     * Login with cookie and user info
+    *
     * @param cookies
     * @return
     */
@@ -36,7 +40,7 @@ class iPostNatural(username: String, password: String) {
     ReqUtil.sendRequest(req)
   }
 
-  def uploadPhoto(postImage: File, cookies: List[Cookie]): (Future[List[Cookie]], String) = {
+  def uploadPhoto(postImage: File, cookies: List[Cookie]): Future[String] = {
     val uploadId = System.currentTimeMillis.toString
     val req: Req = ReqUtil.getNaturalReq(NaturalMethods.CREATE_UPLOAD_PHOTO, cookies, isAjax = true)
       .setMethod("POST")
@@ -44,7 +48,9 @@ class iPostNatural(username: String, password: String) {
       .addBodyPart(new StringPart("upload_id", uploadId, "text/plain"))
       .addBodyPart(new FilePart("photo", postImage, "image/jpeg")) // contentTypeがデフォルトあかんのでファイルみてcontentType判断しないといけないね
       .addBodyPart(new StringPart("media_type", "1", "text/plain"))
-    (ReqUtil.sendRequest(req), uploadId)
+    ReqUtil.sendRequest(req).flatMap { _ =>
+      Future successful uploadId
+    }
   }
 
   def createConfigure(uploadId: String, caption: String, cookies: List[Cookie]): Future[List[Cookie]] = {
