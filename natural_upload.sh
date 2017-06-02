@@ -1,14 +1,18 @@
+#!/usr/bin/env bash
 # If you can see camera button on Browser, when you change user-agent to mobile.
 # You should set hoge.jpg image to same directory with this file or change `photo=@hoge.jpg` to image path that you want to upload.
 # Please set instagram username and password.
 
+echo -n "Please Enter your Instagram Username: "
+read USER_NAME
+
+echo -n "Please Enter your Instagram Password: "
+read -s PASSWORD
+
 # Login Info
-USER_NAME=""
-PASSWORD=""
 USER_AGENT="Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
 
 function curl_req() {
-    echo "$1"
     eval "$1"
     CSRF_TOKEN=$(cat cookie.txt | grep csrftoken | awk '{print $7}')
     sleep 3s
