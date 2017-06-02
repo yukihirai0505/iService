@@ -1,3 +1,5 @@
+import java.io.File
+
 import com.yukihirai0505.iPost.iPostNatural
 import org.scalatest._
 
@@ -10,9 +12,12 @@ class iPostNaturalSpec extends FlatSpec with Matchers {
   val iPostNatural = new iPostNatural(username, password)
 
   "UploadMedia" should "return a Some[MediaFeed]" in {
-    val firstCookies = Await.result(iPostNatural.top(), Duration.Inf)
-    val secondCookies = Await.result(iPostNatural.login(firstCookies), Duration.Inf)
-    //Await.result(iPostNatural.top(secondCookies), Duration.Inf)
+    val cookies1 = Await.result(iPostNatural.top(), Duration.Inf)
+    val cookies2 = Await.result(iPostNatural.login(cookies1), Duration.Inf)
+    val cookies3 = Await.result(iPostNatural.top(cookies2), Duration.Inf)
+    val uploadPhotoReq = iPostNatural.uploadPhoto(new File("hoge.jpg"), cookies3)
+    val uploadId = uploadPhotoReq._2
+    val cookies4 = Await.result(uploadPhotoReq._1, Duration.Inf)
     true should ===(true)
   }
 

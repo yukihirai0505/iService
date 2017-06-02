@@ -12,7 +12,7 @@ import com.yukihirai0505.iPost.constans.APIMethods
 import com.yukihirai0505.iPost.constans.Constants.{HASH_HMAC_KEY, UTF8}
 import com.yukihirai0505.iPost.models.{Login, MediaConfigure}
 import com.yukihirai0505.iPost.responses.MediaUpload
-import com.yukihirai0505.iPost.utils.{HashUtil, ReqUtil}
+import com.yukihirai0505.iPost.utils.{DateUtil, HashUtil, ReqUtil}
 import dispatch.{Future, Req}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -30,7 +30,7 @@ class iPost(username: String, password: String) {
   def mediaUpload(postImage: File, cookies: List[Cookie]): Future[Option[String]] = {
     val request: Req = ReqUtil.getApiReq(APIMethods.MEDIA_UPLOAD, isFormUrlEncoded = false, cookies)
       .addBodyPart(new FilePart("photo", postImage))
-      .addBodyPart(new StringPart("device_timestamp", timestamp))
+      .addBodyPart(new StringPart("device_timestamp", DateUtil.timestamp))
     Request.send[MediaUpload](request).flatMap {
       case Some(v) => Future successful Some(v.mediaId)
       case _ => Future successful None
@@ -39,17 +39,13 @@ class iPost(username: String, password: String) {
   }
 
   def mediaConfigure(mediaId: String, caption: String, cookies: List[Cookie]): Future[List[Cookie]] = {
-    val json = Json.prettyPrint(Json.toJson(MediaConfigure(uuid, deviceId, timestamp, mediaId, caption)))
+    val json = Json.prettyPrint(Json.toJson(MediaConfigure(uuid, deviceId, DateUtil.timestamp, mediaId, caption)))
     val request: Req = ReqUtil.getApiReq(APIMethods.MEDIA_CONFIGURE, cookies = cookies).setBody(createSingedBody(json))
     ReqUtil.sendRequest(request)
   }
 
   def createSingedBody(json: String): String = {
     s"ig_sig_key_version=4&signed_body=${HashUtil.hashHmac(json, HASH_HMAC_KEY)}.${URLEncoder.encode(json, UTF8).replaceAll("\\+", "%20").replaceAll("\\-", "%2D")}"
-  }
-
-  def timestamp: String = {
-    (System.currentTimeMillis / 1000).toString
   }
 
 }

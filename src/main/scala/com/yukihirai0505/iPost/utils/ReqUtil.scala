@@ -24,19 +24,17 @@ object ReqUtil {
 
   def getNaturalReq(requestUrl: String, cookies: List[Cookie] = List.empty[Cookie], isAjax: Boolean = false): Req = {
     val baseReq = url(requestUrl)
+      .addHeader("User-Agent", IOS_USER_AGENT)
     val csrfToken = cookies.find(v => v.getName.equals("csrftoken")).map(_.getValue).getOrElse("")
     val newReq = if (isAjax)
       baseReq
         .addHeader("Host", "www.instagram.com")
-        .addHeader("User-Agent", IOS_USER_AGENT)
-        .addHeader("Accept", "*/*")
-        .addHeader("Accept-Language", "ar,en-US;q=0.7,en;q=0.3")
-        .addHeader("Accept-Encoding", "gzip, deflate, br")
-        .addHeader("X-CSRFToken", csrfToken)
-        .addHeader("X-Instagram-AJAX", "1")
-        .addHeader("Content-Type", CONTENT_TYPE)
         .addHeader("X-Requested-With", "XMLHttpRequest")
-        .addHeader("Referer", "https://www.instagram.com/")
+        .addHeader("X-Instagram-AJAX", "1")
+        .addHeader("Accept", "*/*")
+        .addHeader("X-CSRFToken", csrfToken)
+        .addHeader("Accept-Encoding", "gzip, deflate, br")
+        .addHeader("Accept-Language", "ja,en-US;q=0.8,en;q=0.6")
     else baseReq
     addCookies(cookies, newReq)
   }
