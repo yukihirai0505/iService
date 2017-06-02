@@ -10,8 +10,9 @@ class iPostNaturalSpec extends FlatSpec with Matchers {
   val iPostNatural = new iPostNatural(username, password)
 
   "UploadMedia" should "return a Some[MediaFeed]" in {
-    val cookies = Await.result(iPostNatural.top(), Duration.Inf)
-    Await.result(iPostNatural.login(cookies), Duration.Inf)
+    val firstCookies = Await.result(iPostNatural.top(), Duration.Inf)
+    val secondCookies = Await.result(iPostNatural.login(firstCookies), Duration.Inf)
+    //Await.result(iPostNatural.top(secondCookies), Duration.Inf)
     true should ===(true)
   }
 
