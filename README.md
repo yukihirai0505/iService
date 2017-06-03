@@ -1,4 +1,9 @@
-## Examples
+There are two ways to post photo to instagram.
+
+## Example1
+
+Using private API.
+
 
 ```scala
 import java.io.File
@@ -14,4 +19,12 @@ iPost.login().flatMap { cookies =>
     iPost.mediaConfigure(mediaId.get, "caption", cookies)
   }
 }
+```
+
+## Example2
+
+Using browser url
+
+```
+sh ./natural_upload.sh
 ```
