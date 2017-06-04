@@ -40,6 +40,12 @@ class iPostNatural(username: String, password: String) {
     ReqUtil.sendRequest(req)
   }
 
+  /**
+    * Upload a photo
+    * @param postImage
+    * @param cookies
+    * @return
+    */
   def uploadPhoto(postImage: File, cookies: List[Cookie]): Future[String] = {
     val uploadId = System.currentTimeMillis.toString
     val req: Req = ReqUtil.getNaturalReq(NaturalMethods.CREATE_UPLOAD_PHOTO, cookies, isAjax = true)
@@ -53,6 +59,13 @@ class iPostNatural(username: String, password: String) {
     }
   }
 
+  /**
+    * Share a photo with caption
+    * @param uploadId
+    * @param caption
+    * @param cookies
+    * @return
+    */
   def createConfigure(uploadId: String, caption: String, cookies: List[Cookie]): Future[List[Cookie]] = {
     val body = Map(
       "upload_id" -> uploadId,
