@@ -66,6 +66,7 @@ class iPostNatural(username: String, password: String) {
   def uploadPhoto(postImage: File, cookies: List[Cookie]): Future[String] = {
     val uploadId = System.currentTimeMillis.toString
     val ext: String = postImage.getName.toLowerCase.split("\\.").last
+    // FIXME: png image not allowed
     val contentType = ext match {
       case "jpg" | "jpeg" => ContentType.IMAGE_JPEG
       case "png" => ContentType.IMAGE_PNG

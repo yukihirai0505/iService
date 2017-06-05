@@ -48,4 +48,5 @@ val iPostNatural = new iPostNatural(username, password)
 iPostNatural.postNaturalWays(new File("hoge.jpg"), "投稿テスト").flatMap { _ =>
   Future successful "posted"
 }
+
 ```
