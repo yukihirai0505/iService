@@ -22,12 +22,21 @@ class iPost(username: String, password: String) {
   private val uuid: String = HashUtil.createUUID
   private val deviceId = s"android-$uuid"
 
+  def post(postImage: File, caption: String): Future[List[Cookie]] = {
+    login().flatMap { c1 =>
+      mediaUpload(postImage, c1).flatMap { mediaId =>
+        mediaConfigure(mediaId.getOrElse(""), caption, c1)
+      }
+    }
+  }
+
   def login(): Future[List[Cookie]] = {
     val json = Json.prettyPrint(Json.toJson(Login(username, password, uuid, deviceId)))
     ReqUtil.sendRequest(ReqUtil.getApiReq(APIMethods.ACCOUNTS_LOGIN).setBody(createSingedBody(json)))
   }
 
   def mediaUpload(postImage: File, cookies: List[Cookie]): Future[Option[String]] = {
+    Thread.sleep(3000)
     val request: Req = ReqUtil.getApiReq(APIMethods.MEDIA_UPLOAD, isFormUrlEncoded = false, cookies)
       .addBodyPart(new FilePart("photo", postImage))
       .addBodyPart(new StringPart("device_timestamp", DateUtil.timestamp))
@@ -39,6 +48,7 @@ class iPost(username: String, password: String) {
   }
 
   def mediaConfigure(mediaId: String, caption: String, cookies: List[Cookie]): Future[List[Cookie]] = {
+    Thread.sleep(3000)
     val json = Json.prettyPrint(Json.toJson(MediaConfigure(uuid, deviceId, DateUtil.timestamp, mediaId, caption)))
     val request: Req = ReqUtil.getApiReq(APIMethods.MEDIA_CONFIGURE, cookies = cookies).setBody(createSingedBody(json))
     ReqUtil.sendRequest(request)
