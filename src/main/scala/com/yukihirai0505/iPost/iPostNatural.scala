@@ -12,8 +12,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class iPostNatural(username: String, password: String) {
 
-  /***
+  /**
     * Post Photo in natural ways
+    *
     * @param postImage
     * @param caption
     * @return
@@ -61,6 +62,7 @@ class iPostNatural(username: String, password: String) {
 
   /**
     * Upload a photo
+    *
     * @param postImage
     * @param cookies
     * @return
@@ -68,23 +70,18 @@ class iPostNatural(username: String, password: String) {
   def uploadPhoto(postImage: File, cookies: List[Cookie]): Future[String] = {
     Thread.sleep(3000)
     val uploadId = System.currentTimeMillis.toString
-    val ext: String = postImage.getName.toLowerCase.split("\\.").last
-    // FIXME: png image not allowed
-    val contentType = ext match {
-      case "jpg" | "jpeg" => ContentType.IMAGE_JPEG
-      case "png" => ContentType.IMAGE_PNG
-    }
     val req: Req = ReqUtil.getNaturalReq(NaturalMethods.CREATE_UPLOAD_PHOTO, cookies, isAjax = true)
       .setMethod("POST")
       .addHeader("Referer", "https://www.instagram.com/create/crop/")
       .addBodyPart(new StringPart("upload_id", uploadId, ContentType.TEXT_PLAIN))
-      .addBodyPart(new FilePart("photo", postImage, contentType))
+      .addBodyPart(new FilePart("photo", postImage, ContentType.IMAGE_JPEG)) // Browser allowed only jpg
       .addBodyPart(new StringPart("media_type", "1", ContentType.TEXT_PLAIN))
     ReqUtil.sendRequest(req).flatMap(_ => Future successful uploadId)
   }
 
   /**
     * Share a photo with caption
+    *
     * @param uploadId
     * @param caption
     * @param cookies
