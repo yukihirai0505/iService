@@ -48,11 +48,16 @@ class iPostNatural(username: String, password: String) {
     */
   def uploadPhoto(postImage: File, cookies: List[Cookie]): Future[String] = {
     val uploadId = System.currentTimeMillis.toString
+    val ext: String = postImage.getName.toLowerCase.split("\\.").last
+    val contentType = ext match {
+      case "jpg" | "jpeg" => "image/jpeg"
+      case "png" => "image/png"
+    }
     val req: Req = ReqUtil.getNaturalReq(NaturalMethods.CREATE_UPLOAD_PHOTO, cookies, isAjax = true)
       .setMethod("POST")
       .addHeader("Referer", "https://www.instagram.com/create/crop/")
       .addBodyPart(new StringPart("upload_id", uploadId, "text/plain"))
-      .addBodyPart(new FilePart("photo", postImage, "image/jpeg")) // contentTypeがデフォルトあかんのでファイルみてcontentType判断しないといけないね
+      .addBodyPart(new FilePart("photo", postImage, contentType))
       .addBodyPart(new StringPart("media_type", "1", "text/plain"))
     ReqUtil.sendRequest(req).flatMap { _ =>
       Future successful uploadId
