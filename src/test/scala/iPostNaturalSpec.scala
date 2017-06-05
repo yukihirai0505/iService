@@ -11,12 +11,8 @@ class iPostNaturalSpec extends FlatSpec with Matchers {
   val (username, password) = (sys.env("INSTAGRAM_USERNAME"), sys.env("INSTAGRAM_PASSWORD"))
   val iPostNatural = new iPostNatural(username, password)
 
-  "UploadMedia" should "return a Some[MediaFeed]" in {
-    val cookies1 = Await.result(iPostNatural.top(), Duration.Inf)
-    val cookies2 = Await.result(iPostNatural.login(cookies1), Duration.Inf)
-    val cookies3 = Await.result(iPostNatural.top(cookies2), Duration.Inf)
-    val uploadId = Await.result(iPostNatural.uploadPhoto(new File("hoge.jpg"), cookies3), Duration.Inf)
-    Await.result(iPostNatural.createConfigure(uploadId, "投稿テスト", cookies3), Duration.Inf)
+  "postNaturalWays" should "post photo to instagram" in {
+    Await.result(iPostNatural.postNaturalWays(new File("hoge.jpg"), "投稿テスト"), Duration.Inf)
     true should ===(true)
   }
 

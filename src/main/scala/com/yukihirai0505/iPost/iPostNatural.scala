@@ -4,14 +4,31 @@ import java.io.File
 
 import com.ning.http.client.cookie.Cookie
 import com.ning.http.client.multipart.{FilePart, StringPart}
-import com.yukihirai0505.iPost.constans.Constants.CONTENT_TYPE
-import com.yukihirai0505.iPost.constans.NaturalMethods
+import com.yukihirai0505.iPost.constans.{ContentType, NaturalMethods}
 import com.yukihirai0505.iPost.utils.ReqUtil
 import dispatch.{Future, Req}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class iPostNatural(username: String, password: String) {
+
+  /***
+    * Post Photo in natural ways
+    * @param postImage
+    * @param caption
+    * @return
+    */
+  def postNaturalWays(postImage: File, caption: String): Future[List[Cookie]] = {
+    top().flatMap { c1 =>
+      login(c1).flatMap { c2 =>
+        top(c2).flatMap { c3 =>
+          uploadPhoto(postImage, c3).flatMap { uploadId =>
+            createConfigure(uploadId, caption, c3)
+          }
+        }
+      }
+    }
+  }
 
   /**
     * Access Top page and get cookie
@@ -35,7 +52,7 @@ class iPostNatural(username: String, password: String) {
       "password" -> password
     )
     val req = ReqUtil.getNaturalReq(NaturalMethods.ACCOUNTS_LOGIN_AJAX, cookies, isAjax = true)
-      .addHeader("Content-Type", CONTENT_TYPE)
+      .addHeader("Content-Type", ContentType.APPLICATION_X_WWW_FORM_URL_ENCODED)
       .addHeader("Referer", "https://www.instagram.com/") << body
     ReqUtil.sendRequest(req)
   }
@@ -50,18 +67,16 @@ class iPostNatural(username: String, password: String) {
     val uploadId = System.currentTimeMillis.toString
     val ext: String = postImage.getName.toLowerCase.split("\\.").last
     val contentType = ext match {
-      case "jpg" | "jpeg" => "image/jpeg"
-      case "png" => "image/png"
+      case "jpg" | "jpeg" => ContentType.IMAGE_JPEG
+      case "png" => ContentType.IMAGE_PNG
     }
     val req: Req = ReqUtil.getNaturalReq(NaturalMethods.CREATE_UPLOAD_PHOTO, cookies, isAjax = true)
       .setMethod("POST")
       .addHeader("Referer", "https://www.instagram.com/create/crop/")
-      .addBodyPart(new StringPart("upload_id", uploadId, "text/plain"))
+      .addBodyPart(new StringPart("upload_id", uploadId, ContentType.TEXT_PLAIN))
       .addBodyPart(new FilePart("photo", postImage, contentType))
-      .addBodyPart(new StringPart("media_type", "1", "text/plain"))
-    ReqUtil.sendRequest(req).flatMap { _ =>
-      Future successful uploadId
-    }
+      .addBodyPart(new StringPart("media_type", "1", ContentType.TEXT_PLAIN))
+    ReqUtil.sendRequest(req).flatMap(_ => Future successful uploadId)
   }
 
   /**
@@ -77,7 +92,7 @@ class iPostNatural(username: String, password: String) {
       "caption" -> caption
     )
     val req = ReqUtil.getNaturalReq(NaturalMethods.CREATE_CONFIGURE, cookies, isAjax = true)
-      .addHeader("Content-Type", CONTENT_TYPE)
+      .addHeader("Content-Type", ContentType.APPLICATION_X_WWW_FORM_URL_ENCODED)
       .addHeader("Referer", "https://www.instagram.com/create/details/") << body
     ReqUtil.sendRequest(req)
   }

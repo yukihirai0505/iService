@@ -25,6 +25,27 @@ iPost.login().flatMap { cookies =>
 
 Using browser url
 
+
+### Using Shell script
+
 ```
 sh ./natural_upload.sh
+```
+
+### Using scala
+
+```scala
+import java.io.File
+
+import com.yukihirai0505.iPost.iPostNatural
+
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
+val (username, password) = (sys.env("INSTAGRAM_USERNAME"), sys.env("INSTAGRAM_PASSWORD"))
+val iPostNatural = new iPostNatural(username, password)
+
+iPostNatural.postNaturalWays(new File("hoge.jpg"), "投稿テスト").flatMap { _ =>
+  Future successful "posted"
+}
 ```
