@@ -1,6 +1,6 @@
 name := """iPost"""
 
-version := "1.1"
+version := "1.2"
 
 scalaVersion := "2.11.7"
 
@@ -30,7 +30,7 @@ organizationName := "com.yukihirai0505"
 
 organizationHomepage := Some(url("https://yukihirai0505.github.io"))
 
-description := "A Scala library for the Instagram Private Post API"
+description := "A Scala library for the Instagram Post"
 
 pomExtra :=
   <url>https://github.com/yukihirai0505/iPost</url>
