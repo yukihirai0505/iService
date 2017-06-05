@@ -36,6 +36,7 @@ class iPostNatural(username: String, password: String) {
     * @return
     */
   def top(cookies: List[Cookie] = List.empty[Cookie]): Future[List[Cookie]] = {
+    Thread.sleep(3000)
     val req = ReqUtil.getNaturalReq(NaturalMethods.TOP, cookies)
     ReqUtil.sendRequest(req)
   }
@@ -47,6 +48,7 @@ class iPostNatural(username: String, password: String) {
     * @return
     */
   def login(cookies: List[Cookie]): Future[List[Cookie]] = {
+    Thread.sleep(3000)
     val body = Map(
       "username" -> username,
       "password" -> password
@@ -64,6 +66,7 @@ class iPostNatural(username: String, password: String) {
     * @return
     */
   def uploadPhoto(postImage: File, cookies: List[Cookie]): Future[String] = {
+    Thread.sleep(3000)
     val uploadId = System.currentTimeMillis.toString
     val ext: String = postImage.getName.toLowerCase.split("\\.").last
     // FIXME: png image not allowed
@@ -88,6 +91,7 @@ class iPostNatural(username: String, password: String) {
     * @return
     */
   def createConfigure(uploadId: String, caption: String, cookies: List[Cookie]): Future[List[Cookie]] = {
+    Thread.sleep(3000)
     val body = Map(
       "upload_id" -> uploadId,
       "caption" -> caption
