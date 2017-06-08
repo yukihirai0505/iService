@@ -4,7 +4,7 @@ import java.io.File
 
 import com.ning.http.client.cookie.Cookie
 import com.ning.http.client.multipart.{FilePart, StringPart}
-import com.yukihirai0505.iPost.constans.{ContentType, NaturalMethods}
+import com.yukihirai0505.iPost.constans.{ContentType, Methods}
 import com.yukihirai0505.iPost.utils.ReqUtil
 import dispatch.{Future, Req}
 
@@ -38,7 +38,7 @@ class iPostNatural(username: String, password: String) {
     */
   def top(cookies: List[Cookie] = List.empty[Cookie], sleepTime: Int = 0): Future[List[Cookie]] = {
     Thread.sleep(sleepTime)
-    val req = ReqUtil.getNaturalReq(NaturalMethods.TOP, cookies)
+    val req = ReqUtil.getNaturalReq(Methods.Natural.TOP, cookies)
     ReqUtil.sendRequest(req)
   }
 
@@ -54,7 +54,7 @@ class iPostNatural(username: String, password: String) {
       "username" -> username,
       "password" -> password
     )
-    val req = ReqUtil.getNaturalReq(NaturalMethods.ACCOUNTS_LOGIN_AJAX, cookies, isAjax = true)
+    val req = ReqUtil.getNaturalReq(Methods.Natural.ACCOUNTS_LOGIN_AJAX, cookies, isAjax = true)
       .addHeader("Content-Type", ContentType.APPLICATION_X_WWW_FORM_URL_ENCODED)
       .addHeader("Referer", "https://www.instagram.com/") << body
     ReqUtil.sendRequest(req)
@@ -70,7 +70,7 @@ class iPostNatural(username: String, password: String) {
   def uploadPhoto(postImage: File, cookies: List[Cookie], sleepTime: Int = 3000): Future[String] = {
     Thread.sleep(sleepTime)
     val uploadId = System.currentTimeMillis.toString
-    val req: Req = ReqUtil.getNaturalReq(NaturalMethods.CREATE_UPLOAD_PHOTO, cookies, isAjax = true)
+    val req: Req = ReqUtil.getNaturalReq(Methods.Natural.CREATE_UPLOAD_PHOTO, cookies, isAjax = true)
       .setMethod("POST")
       .addHeader("Referer", "https://www.instagram.com/create/crop/")
       .addBodyPart(new StringPart("upload_id", uploadId, ContentType.TEXT_PLAIN))
@@ -93,7 +93,7 @@ class iPostNatural(username: String, password: String) {
       "upload_id" -> uploadId,
       "caption" -> caption
     )
-    val req = ReqUtil.getNaturalReq(NaturalMethods.CREATE_CONFIGURE, cookies, isAjax = true)
+    val req = ReqUtil.getNaturalReq(Methods.Natural.CREATE_CONFIGURE, cookies, isAjax = true)
       .addHeader("Content-Type", ContentType.APPLICATION_X_WWW_FORM_URL_ENCODED)
       .addHeader("Referer", "https://www.instagram.com/create/details/") << body
     ReqUtil.sendRequest(req)

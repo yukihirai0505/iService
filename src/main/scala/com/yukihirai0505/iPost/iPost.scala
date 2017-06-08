@@ -8,8 +8,8 @@ import play.api.libs.json.Json
 import com.ning.http.client.cookie.Cookie
 import com.ning.http.client.multipart.{FilePart, StringPart}
 import com.yukihirai0505.com.scala.Request
-import com.yukihirai0505.iPost.constans.APIMethods
 import com.yukihirai0505.iPost.constans.Constants.{HASH_HMAC_KEY, UTF8}
+import com.yukihirai0505.iPost.constans.Methods
 import com.yukihirai0505.iPost.models.{Login, MediaConfigure}
 import com.yukihirai0505.iPost.responses.MediaUpload
 import com.yukihirai0505.iPost.utils.{DateUtil, HashUtil, ReqUtil}
@@ -30,14 +30,15 @@ class iPost(username: String, password: String) {
     }
   }
 
-  def login(): Future[List[Cookie]] = {
+  def login(sleepTime: Int = 3000): Future[List[Cookie]] = {
+    Thread.sleep(sleepTime)
     val json = Json.prettyPrint(Json.toJson(Login(username, password, uuid, deviceId)))
-    ReqUtil.sendRequest(ReqUtil.getApiReq(APIMethods.ACCOUNTS_LOGIN).setBody(createSingedBody(json)))
+    ReqUtil.sendRequest(ReqUtil.getApiReq(Methods.Private.ACCOUNTS_LOGIN).setBody(createSingedBody(json)))
   }
 
-  def mediaUpload(postImage: File, cookies: List[Cookie]): Future[Option[String]] = {
-    Thread.sleep(3000)
-    val request: Req = ReqUtil.getApiReq(APIMethods.MEDIA_UPLOAD, isFormUrlEncoded = false, cookies)
+  def mediaUpload(postImage: File, cookies: List[Cookie], sleepTime: Int = 3000): Future[Option[String]] = {
+    Thread.sleep(sleepTime)
+    val request: Req = ReqUtil.getApiReq(Methods.Private.MEDIA_UPLOAD, isFormUrlEncoded = false, cookies)
       .addBodyPart(new FilePart("photo", postImage))
       .addBodyPart(new StringPart("device_timestamp", DateUtil.timestamp))
     Request.send[MediaUpload](request).flatMap {
@@ -47,10 +48,10 @@ class iPost(username: String, password: String) {
 
   }
 
-  def mediaConfigure(mediaId: String, caption: String, cookies: List[Cookie]): Future[List[Cookie]] = {
-    Thread.sleep(3000)
+  def mediaConfigure(mediaId: String, caption: String, cookies: List[Cookie], sleepTime: Int = 5000): Future[List[Cookie]] = {
+    Thread.sleep(sleepTime)
     val json = Json.prettyPrint(Json.toJson(MediaConfigure(uuid, deviceId, DateUtil.timestamp, mediaId, caption)))
-    val request: Req = ReqUtil.getApiReq(APIMethods.MEDIA_CONFIGURE, cookies = cookies).setBody(createSingedBody(json))
+    val request: Req = ReqUtil.getApiReq(Methods.Private.MEDIA_CONFIGURE, cookies = cookies).setBody(createSingedBody(json))
     ReqUtil.sendRequest(request)
   }
 
