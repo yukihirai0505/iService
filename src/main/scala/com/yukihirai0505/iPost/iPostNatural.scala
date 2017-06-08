@@ -4,7 +4,10 @@ import java.io.File
 
 import com.ning.http.client.cookie.Cookie
 import com.ning.http.client.multipart.{FilePart, StringPart}
+import com.yukihirai0505.com.scala.Request
+import com.yukihirai0505.com.scala.model.Response
 import com.yukihirai0505.iPost.constans.{ContentType, Methods}
+import com.yukihirai0505.iPost.responses.{CreateConfigure, UploadPhoto}
 import com.yukihirai0505.iPost.utils.ReqUtil
 import dispatch.{Future, Req}
 
@@ -19,12 +22,13 @@ class iPostNatural(username: String, password: String) {
     * @param caption
     * @return
     */
-  def postNaturalWays(postImage: File, caption: String): Future[List[Cookie]] = {
+  def postNaturalWays(postImage: File, caption: String): Future[Either[Throwable, Boolean]] = {
     top().flatMap { c1 =>
       login(c1).flatMap { c2 =>
         top(c2).flatMap { c3 =>
-          uploadPhoto(postImage, c3).flatMap { uploadId =>
-            createConfigure(uploadId, caption, c3)
+          uploadPhoto(postImage, c3).flatMap {
+            case Right(uploadId) => createConfigure(uploadId, caption, c3)
+            case Left(e) => Future successful Left(e)
           }
         }
       }
@@ -67,7 +71,7 @@ class iPostNatural(username: String, password: String) {
     * @param cookies
     * @return
     */
-  def uploadPhoto(postImage: File, cookies: List[Cookie], sleepTime: Int = 3000): Future[String] = {
+  def uploadPhoto(postImage: File, cookies: List[Cookie], sleepTime: Int = 3000): Future[Either[Throwable, String]] = {
     Thread.sleep(sleepTime)
     val uploadId = System.currentTimeMillis.toString
     val req: Req = ReqUtil.getNaturalReq(Methods.Natural.CREATE_UPLOAD_PHOTO, cookies, isAjax = true)
@@ -76,7 +80,10 @@ class iPostNatural(username: String, password: String) {
       .addBodyPart(new StringPart("upload_id", uploadId, ContentType.TEXT_PLAIN))
       .addBodyPart(new FilePart("photo", postImage, ContentType.IMAGE_JPEG)) // Browser allowed only jpg
       .addBodyPart(new StringPart("media_type", "1", ContentType.TEXT_PLAIN))
-    ReqUtil.sendRequest(req).flatMap(_ => Future successful uploadId)
+    Request.sendRequestJson[UploadPhoto](req).flatMap {
+      case Response(Some(v), _) => Future successful Right(v.uploadId)
+      case _ => Future successful Left(throw new RuntimeException("iPostNatural uploadPhoto failed"))
+    }
   }
 
   /**
@@ -87,7 +94,7 @@ class iPostNatural(username: String, password: String) {
     * @param cookies
     * @return
     */
-  def createConfigure(uploadId: String, caption: String, cookies: List[Cookie], sleepTime: Int = 5000): Future[List[Cookie]] = {
+  def createConfigure(uploadId: String, caption: String, cookies: List[Cookie], sleepTime: Int = 5000): Future[Either[Throwable, Boolean]] = {
     Thread.sleep(sleepTime)
     val body = Map(
       "upload_id" -> uploadId,
@@ -96,7 +103,10 @@ class iPostNatural(username: String, password: String) {
     val req = ReqUtil.getNaturalReq(Methods.Natural.CREATE_CONFIGURE, cookies, isAjax = true)
       .addHeader("Content-Type", ContentType.APPLICATION_X_WWW_FORM_URL_ENCODED)
       .addHeader("Referer", "https://www.instagram.com/create/details/") << body
-    ReqUtil.sendRequest(req)
+    Request.sendRequestJson[CreateConfigure](req).flatMap {
+      case Response(Some(v), _) => Future successful Right(v.status == "ok")
+      case _ => Future successful Left(throw new RuntimeException("iPostNatural createConfigure failed"))
+    }
   }
 
 }

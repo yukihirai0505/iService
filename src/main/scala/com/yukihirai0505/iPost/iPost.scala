@@ -8,6 +8,7 @@ import play.api.libs.json.Json
 import com.ning.http.client.cookie.Cookie
 import com.ning.http.client.multipart.{FilePart, StringPart}
 import com.yukihirai0505.com.scala.Request
+import com.yukihirai0505.com.scala.model.Response
 import com.yukihirai0505.iPost.constans.Constants.{HASH_HMAC_KEY, UTF8}
 import com.yukihirai0505.iPost.constans.Methods
 import com.yukihirai0505.iPost.models.{Login, MediaConfigure}
@@ -41,8 +42,8 @@ class iPost(username: String, password: String) {
     val request: Req = ReqUtil.getApiReq(Methods.Private.MEDIA_UPLOAD, isFormUrlEncoded = false, cookies)
       .addBodyPart(new FilePart("photo", postImage))
       .addBodyPart(new StringPart("device_timestamp", DateUtil.timestamp))
-    Request.send[MediaUpload](request).flatMap {
-      case Some(v) => Future successful Some(v.mediaId)
+    Request.sendRequestJson[MediaUpload](request).flatMap {
+      case Response(Some(v), _) => Future successful Some(v.mediaId)
       case _ => Future successful None
     }
 

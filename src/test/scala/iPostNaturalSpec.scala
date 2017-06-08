@@ -12,7 +12,10 @@ class iPostNaturalSpec extends FlatSpec with Matchers {
   val iPostNatural = new iPostNatural(username, password)
 
   "postNaturalWays" should "post photo to instagram" in {
-    Await.result(iPostNatural.postNaturalWays(new File("hoge.jpg"), "投稿テスト"), Duration.Inf)
+    Await.result(iPostNatural.postNaturalWays(new File("hoge.jpg"), "投稿テスト"), Duration.Inf) match {
+      case Right(v) => println("result:" + v)
+      case Left(e) => println("failed", e)
+    }
     true should ===(true)
   }
 

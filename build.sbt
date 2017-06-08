@@ -5,7 +5,7 @@ version := "1.2"
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
-  "com.yukihirai0505" % "scala-request-json_2.11" % "1.0",
+  "com.yukihirai0505" % "scala-request-json_2.11" % "1.3",
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
 
