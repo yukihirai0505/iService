@@ -46,7 +46,7 @@ val (username, password) = (sys.env("INSTAGRAM_USERNAME"), sys.env("INSTAGRAM_PA
 val iPostNatural = new iPostNatural(username, password)
 
 iPostNatural.postNaturalWays(new File("hoge.jpg"), "投稿テスト").flatMap {
-  case Right(bool) => Future successful (if (bool) "posted" else "failed")
+  case Right(result) => Future successful (if (result.status) "posted" else "failed")
   case Left(_) => Future successful "failed"
 }
 

@@ -15,6 +15,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class iPostNatural(username: String, password: String) {
 
+  case class Result(status: Boolean, code: String)
   /**
     * Post Photo in natural ways
     *
@@ -22,7 +23,7 @@ class iPostNatural(username: String, password: String) {
     * @param caption
     * @return
     */
-  def postNaturalWays(postImage: File, caption: String): Future[Either[Throwable, Boolean]] = {
+  def postNaturalWays(postImage: File, caption: String): Future[Either[Throwable, Result]] = {
     top().flatMap { c1 =>
       login(c1).flatMap { c2 =>
         top(c2).flatMap { c3 =>
@@ -94,7 +95,7 @@ class iPostNatural(username: String, password: String) {
     * @param cookies
     * @return
     */
-  def createConfigure(uploadId: String, caption: String, cookies: List[Cookie], sleepTime: Int = 5000): Future[Either[Throwable, Boolean]] = {
+  def createConfigure(uploadId: String, caption: String, cookies: List[Cookie], sleepTime: Int = 5000): Future[Either[Throwable, Result]] = {
     Thread.sleep(sleepTime)
     val body = Map(
       "upload_id" -> uploadId,
@@ -104,7 +105,7 @@ class iPostNatural(username: String, password: String) {
       .addHeader("Content-Type", ContentType.APPLICATION_X_WWW_FORM_URL_ENCODED)
       .addHeader("Referer", "https://www.instagram.com/create/details/") << body
     Request.sendRequestJson[CreateConfigure](req).flatMap {
-      case Response(Some(v), _) => Future successful Right(v.status == "ok")
+      case Response(Some(v), _) => Future successful Right(Result(v.status == "ok", v.media.fold("")(v => v.code)))
       case _ => Future successful Left(throw new RuntimeException("iPostNatural createConfigure failed"))
     }
   }
