@@ -24,16 +24,18 @@ class iPostNatural(username: String, password: String) {
     * @return
     */
   def postNaturalWays(postImage: File, caption: String): Future[Either[Throwable, Result]] = {
-    top().flatMap { c1 =>
-      login(c1).flatMap { c2 =>
-        top(c2).flatMap { c3 =>
-          uploadPhoto(postImage, c3).flatMap {
-            case Right(uploadId) => createConfigure(uploadId, caption, c3)
-            case Left(e) => Future successful Left(e)
+    try {
+      top().flatMap { c1 =>
+        login(c1).flatMap { c2 =>
+          top(c2).flatMap { c3 =>
+            uploadPhoto(postImage, c3).flatMap {
+              case Right(uploadId) => createConfigure(uploadId, caption, c3)
+              case Left(e) => Future successful Left(e)
+            }
           }
         }
       }
-    }
+    } catch {case e: Exception => Future successful Left(e)}
   }
 
   /**
