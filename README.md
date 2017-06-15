@@ -1,5 +1,19 @@
 There are two ways to post photo to instagram.
 
+## Setup
+
+sbt
+
+If you don't have it already, make sure you add the Maven Central as resolver in your SBT settings:
+
+You need to include the library as your dependency:
+
+```scala
+libraryDependencies += "com.yukihirai0505" % "ipost_2.11" % "1.6"
+```
+
+https://search.maven.org/#artifactdetails%7Ccom.yukihirai0505%7Cipost_2.11%7C1.6%7Cjar
+
 ## Example1
 
 Using private API.
