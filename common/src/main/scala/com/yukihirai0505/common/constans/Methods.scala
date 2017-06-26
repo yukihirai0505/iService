@@ -17,6 +17,8 @@ object Methods {
     val ACCOUNTS_LOGIN_AJAX = s"${TOP}accounts/login/ajax/"
     val CREATE_UPLOAD_PHOTO = s"${TOP}create/upload/photo/"
     val CREATE_CONFIGURE = s"${TOP}create/configure/"
+    val FOLLOWER_QUERY = s"${TOP}graphql/query/?query_id=17851374694183129&first=20"
+    val ACCOUNT_URL = s"$TOP%s/"
   }
 
 }
