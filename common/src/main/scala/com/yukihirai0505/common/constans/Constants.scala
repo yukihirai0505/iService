@@ -1,4 +1,4 @@
-package com.yukihirai0505.iPost.constans
+package com.yukihirai0505.common.constans
 
 /**
   * author Yuki Hirai on 2017/05/30.

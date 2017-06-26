@@ -4,8 +4,12 @@ version := "1.6"
 
 scalaVersion := "2.11.7"
 
+lazy val common = ProjectRef(file("../common"), "common")
+lazy val iPost = (project in file("./"))
+  .dependsOn(common)
+  .aggregate(common)
+
 libraryDependencies ++= Seq(
-  "com.yukihirai0505" % "scala-request-json_2.11" % "1.3",
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
 

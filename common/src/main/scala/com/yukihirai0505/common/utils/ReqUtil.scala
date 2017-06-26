@@ -1,10 +1,10 @@
-package com.yukihirai0505.iPost.utils
+package com.yukihirai0505.common.utils
 
 import com.ning.http.client.cookie.Cookie
 import com.yukihirai0505.com.scala.Request
 import com.yukihirai0505.com.scala.constants.Verbs
-import com.yukihirai0505.iPost.constans.Constants.{ANDROID_USER_AGENT, IOS_USER_AGENT, UTF8}
-import com.yukihirai0505.iPost.constans.ContentType
+import com.yukihirai0505.common.constans.ContentType
+import com.yukihirai0505.common.constans.Constants.{ANDROID_USER_AGENT, IOS_USER_AGENT, UTF8}
 import dispatch.{Future, Http, Req}
 
 import scala.collection.JavaConversions._

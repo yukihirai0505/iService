@@ -1,4 +1,4 @@
-package com.yukihirai0505.iPost.models
+package com.yukihirai0505.common.models
 
 case class Login(username: String, password: String, guid: String, deviceId: String)
 
