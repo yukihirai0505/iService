@@ -10,7 +10,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * author Yuki Hirai on 2017/06/26.
   */
-class User(username: String, password: String) {
+class InstagramUser(username: String, password: String) {
 
   def login(): Future[List[Cookie]] = {
     top().flatMap { c1 =>

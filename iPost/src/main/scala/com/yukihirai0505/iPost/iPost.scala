@@ -19,7 +19,7 @@ import dispatch.{Future, Req}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class iPost(username: String, password: String) {
+class iPost(username: String, password: String) extends {
 
   private val uuid: String = HashUtil.createUUID
   private val deviceId = s"android-$uuid"

@@ -1,6 +1,6 @@
 name := """iPost"""
 
-version := "1.6"
+version := "1.7"
 
 scalaVersion := "2.11.7"
 
@@ -37,17 +37,17 @@ organizationHomepage := Some(url("https://yukihirai0505.github.io"))
 description := "A Scala library for the Instagram Post"
 
 pomExtra :=
-  <url>https://github.com/yukihirai0505/iPost</url>
+  <url>https://github.com/yukihirai0505/iService/tree/master/iPost</url>
     <licenses>
       <license>
         <name>MIT</name>
-        <url>https://github.com/yukihirai0505/iPost/blob/master/LICENSE.txt</url>
+        <url>https://github.com/yukihirai0505/iService/blob/master/LICENSE.txt</url>
         <distribution>repo</distribution>
       </license>
     </licenses>
     <scm>
-      <url>git@github.com:yukihirai0505/iPost.git</url>
-      <connection>scm:git:git@github.com:yukihirai0505/iPost.git</connection>
+      <url>git@github.com:yukihirai0505/iService.git</url>
+      <connection>scm:git:git@github.com:yukihirai0505/iService.git</connection>
     </scm>
     <developers>
       <developer>

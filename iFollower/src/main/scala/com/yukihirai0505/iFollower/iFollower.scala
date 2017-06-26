@@ -5,7 +5,7 @@ import play.api.libs.json.{JsError, JsSuccess, Json}
 import com.ning.http.client.cookie.Cookie
 import com.yukihirai0505.com.scala.Request
 import com.yukihirai0505.com.scala.model.Response
-import com.yukihirai0505.common.User
+import com.yukihirai0505.common.InstagramUser
 import com.yukihirai0505.common.constans.Methods
 import com.yukihirai0505.common.utils.ReqUtil
 import com.yukihirai0505.iFollower.responses.{AccountData, FollowerData, Node}
@@ -13,10 +13,10 @@ import dispatch.{Future, Http, Req}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class iFollower(user: User) {
+class iFollower(username: String, password: String) extends InstagramUser(username, password) {
 
   def getFollowers(targetAccountName: String): Future[Either[Throwable, Seq[Node]]] = {
-    user.login().flatMap { c =>
+    login().flatMap { c =>
       getId(targetAccountName).flatMap { targetId =>
         getFollower(cookies = c, id = targetId).flatMap {
           case Right(nodes) => Future successful Right(nodes)

@@ -6,6 +6,7 @@ import com.ning.http.client.cookie.Cookie
 import com.ning.http.client.multipart.{FilePart, StringPart}
 import com.yukihirai0505.com.scala.Request
 import com.yukihirai0505.com.scala.model.Response
+import com.yukihirai0505.common.InstagramUser
 import com.yukihirai0505.common.constans.{ContentType, Methods}
 import com.yukihirai0505.common.utils.ReqUtil
 import com.yukihirai0505.iPost.responses.{CreateConfigure, UploadPhoto}
@@ -13,7 +14,7 @@ import dispatch.{Future, Req}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class iPostNatural(username: String, password: String) {
+class iPostNatural(username: String, password: String) extends InstagramUser(username, password) {
 
   case class Result(status: Boolean, code: String)
 
@@ -25,45 +26,12 @@ class iPostNatural(username: String, password: String) {
     * @return
     */
   def postNaturalWays(postImage: File, caption: String): Future[Either[Throwable, Result]] = {
-    top().flatMap { c1 =>
-      login(c1).flatMap { c2 =>
-        top(c2).flatMap { c3 =>
-          uploadPhoto(postImage, c3).flatMap {
-            case Right(uploadId) => createConfigure(uploadId, caption, c3)
-            case Left(e) => Future successful Left(e)
-          }
-        }
+    login().flatMap { c =>
+      uploadPhoto(postImage, c).flatMap {
+        case Right(uploadId) => createConfigure(uploadId, caption, c)
+        case Left(e) => Future successful Left(e)
       }
     }.recover { case e: Exception => Left(e) }
-  }
-
-  /**
-    * Access Top page and get cookie
-    *
-    * @return
-    */
-  def top(cookies: List[Cookie] = List.empty[Cookie], sleepTime: Int = 0): Future[List[Cookie]] = {
-    Thread.sleep(sleepTime)
-    val req = ReqUtil.getNaturalReq(Methods.Natural.TOP, cookies)
-    ReqUtil.sendRequest(req)
-  }
-
-  /**
-    * Login with cookie and user info
-    *
-    * @param cookies
-    * @return
-    */
-  def login(cookies: List[Cookie], sleepTime: Int = 3000): Future[List[Cookie]] = {
-    Thread.sleep(sleepTime)
-    val body = Map(
-      "username" -> username,
-      "password" -> password
-    )
-    val req = ReqUtil.getNaturalReq(Methods.Natural.ACCOUNTS_LOGIN_AJAX, cookies, isAjax = true)
-      .addHeader("Content-Type", ContentType.APPLICATION_X_WWW_FORM_URL_ENCODED)
-      .addHeader("Referer", "https://www.instagram.com/") << body
-    ReqUtil.sendRequest(req)
   }
 
   /**
