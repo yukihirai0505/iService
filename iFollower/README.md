@@ -12,7 +12,7 @@ You need to include the library as your dependency:
 libraryDependencies += "com.yukihirai0505" % "ifollower_2.11" % "2.0"
 ```
 
-https://search.maven.org/#artifactdetails%7Ccom.yukihirai0505%7Cipost_2.11%7C1.6%7Cjar
+https://search.maven.org/#artifactdetails%7Ccom.yukihirai0505%7Cifollower_2.11%7C2.0%7Cjar
 
 ## Example
 
