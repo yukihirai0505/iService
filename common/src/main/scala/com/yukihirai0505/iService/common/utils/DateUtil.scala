@@ -1,4 +1,4 @@
-package com.yukihirai0505.common.utils
+package com.yukihirai0505.iService.common.utils
 
 /**
   * author Yuki Hirai on 2017/05/30.

@@ -1,8 +1,9 @@
-package com.yukihirai0505.common
+package com.yukihirai0505.iService.common
 
 import com.ning.http.client.cookie.Cookie
-import com.yukihirai0505.common.constans.{ContentType, Methods}
-import com.yukihirai0505.common.utils.ReqUtil
+import com.yukihirai0505.iService.common.constans.Methods.Natural
+import com.yukihirai0505.iService.common.constans.{ContentType, Methods}
+import com.yukihirai0505.iService.common.utils.ReqUtil
 import dispatch.Future
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -27,7 +28,7 @@ class InstagramUser(username: String, password: String) {
     */
   private def top(cookies: List[Cookie] = List.empty[Cookie], sleepTime: Int = 0): Future[List[Cookie]] = {
     Thread.sleep(sleepTime)
-    val req = ReqUtil.getNaturalReq(Methods.Natural.TOP, cookies)
+    val req = ReqUtil.getNaturalReq(Natural.TOP, cookies)
     ReqUtil.sendRequest(req)
   }
 

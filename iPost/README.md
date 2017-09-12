@@ -9,7 +9,7 @@ If you don't have it already, make sure you add the Maven Central as resolver in
 You need to include the library as your dependency:
 
 ```scala
-libraryDependencies += "com.yukihirai0505" % "ipost_2.11" % "1.6"
+libraryDependencies += "com.yukihirai0505" % "ipost_2.11" % "2.0"
 ```
 
 https://search.maven.org/#artifactdetails%7Ccom.yukihirai0505%7Cipost_2.11%7C1.6%7Cjar

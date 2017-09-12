@@ -5,10 +5,10 @@ import play.api.libs.json.{JsError, JsSuccess, Json}
 import com.ning.http.client.cookie.Cookie
 import com.yukihirai0505.com.scala.Request
 import com.yukihirai0505.com.scala.model.Response
-import com.yukihirai0505.common.InstagramUser
-import com.yukihirai0505.common.constans.Methods
-import com.yukihirai0505.common.utils.ReqUtil
 import com.yukihirai0505.iFollower.responses.{AccountData, FollowerData, Node}
+import com.yukihirai0505.iService.common.InstagramUser
+import com.yukihirai0505.iService.common.constans.Methods
+import com.yukihirai0505.iService.common.utils.ReqUtil
 import dispatch.{Future, Http, Req}
 
 import scala.concurrent.ExecutionContext.Implicits.global

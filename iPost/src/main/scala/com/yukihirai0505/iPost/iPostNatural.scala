@@ -6,10 +6,10 @@ import com.ning.http.client.cookie.Cookie
 import com.ning.http.client.multipart.{FilePart, StringPart}
 import com.yukihirai0505.com.scala.Request
 import com.yukihirai0505.com.scala.model.Response
-import com.yukihirai0505.common.InstagramUser
-import com.yukihirai0505.common.constans.{ContentType, Methods}
-import com.yukihirai0505.common.utils.ReqUtil
 import com.yukihirai0505.iPost.responses.{CreateConfigure, UploadPhoto}
+import com.yukihirai0505.iService.common.InstagramUser
+import com.yukihirai0505.iService.common.constans.{ContentType, Methods}
+import com.yukihirai0505.iService.common.utils.ReqUtil
 import dispatch.{Future, Req}
 
 import scala.concurrent.ExecutionContext.Implicits.global
