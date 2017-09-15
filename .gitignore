@@ -1,4 +1,8 @@
+# Custom
+
 .envrc
+iFollower/followers.txt
+
 ### https://raw.github.com/github/gitignore/52fcfa919c97ab0072a1dbb962f4d805b98dc99b/scala.gitignore
 
 *.class
