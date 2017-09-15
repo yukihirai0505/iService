@@ -17,7 +17,7 @@ class iFollowerSpec extends FlatSpec with Matchers {
     val fileOutPutStream = new FileStream(fileName, append)
     val writer = new StreamWriter( fileOutPutStream, encode )
     Await.result(iFollower.getFollowers(targetAccountName = "i_do_not_like_holidays"), Duration.Inf) match {
-      case Right(v) => v.foreach(n => writer.write(n.node.username))
+      case Right(v) => v.foreach(n => writer.write(s"${n.node.username}\n"))
       case Left(e) => println("failed", e)
     }
     writer.close()
