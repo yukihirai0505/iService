@@ -5,7 +5,13 @@ import play.api.libs.json.Json
 import com.github.tototoshi.play.json.JsonNaming
 
 
-case class ProfileUserData(id: String)
+case class FollowedBy(count: Long)
+
+object FollowedBy {
+  implicit val FollowedByFormat = JsonNaming.snakecase(Json.format[FollowedBy])
+}
+
+case class ProfileUserData(id: String, followedBy: FollowedBy)
 
 object ProfileUserData {
   implicit val ProfileUserDataFormat = JsonNaming.snakecase(Json.format[ProfileUserData])

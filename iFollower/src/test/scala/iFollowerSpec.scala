@@ -16,6 +16,7 @@ class iFollowerSpec extends FlatSpec with Matchers {
     val append = true
     val fileOutPutStream = new FileStream(fileName, append)
     val writer = new StreamWriter( fileOutPutStream, encode )
+    // queryNum has limit (until 9999), but 9999 request will cause error. so it is better to set small number as you can.
     Await.result(iFollower.getFollowers(targetAccountName = "i_do_not_like_holidays"), Duration.Inf) match {
       case Right(v) => v.foreach(n => writer.write(s"${n.node.username}\n"))
       case Left(e) => println("failed", e)
