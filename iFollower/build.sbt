@@ -1,6 +1,6 @@
 name := """iFollower"""
 
-version := "2.0"
+version := "2.1"
 
 scalaVersion := "2.11.7"
 
@@ -10,6 +10,9 @@ lazy val iFollower = (project in file("./"))
   .aggregate(common)
 
 libraryDependencies ++= Seq(
+  // Log
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
 
@@ -37,17 +40,17 @@ organizationHomepage := Some(url("https://yukihirai0505.github.io"))
 description := "A Scala library for the Instagram Follower"
 
 pomExtra :=
-  <url>https://github.com/yukihirai0505/iPost</url>
+  <url>https://github.com/yukihirai0505/iService</url>
     <licenses>
       <license>
         <name>MIT</name>
-        <url>https://github.com/yukihirai0505/iPost/blob/master/LICENSE.txt</url>
+        <url>https://github.com/yukihirai0505/iService/blob/master/LICENSE.txt</url>
         <distribution>repo</distribution>
       </license>
     </licenses>
     <scm>
-      <url>git@github.com:yukihirai0505/iPost.git</url>
-      <connection>scm:git:git@github.com:yukihirai0505/iPost.git</connection>
+      <url>git@github.com:yukihirai0505/iService.git</url>
+      <connection>scm:git:git@github.com:yukihirai0505/iService.git</connection>
     </scm>
     <developers>
       <developer>

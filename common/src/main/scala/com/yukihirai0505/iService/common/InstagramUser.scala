@@ -15,9 +15,7 @@ class InstagramUser(username: String, password: String) {
 
   def login(): Future[List[Cookie]] = {
     top().flatMap { c1 =>
-      loginToInstagram(c1).flatMap { c2 =>
-        top(c2)
-      }
+      loginToInstagram(c1)
     }
   }
 
