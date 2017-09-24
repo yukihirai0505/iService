@@ -7,7 +7,7 @@ scalaVersion := "2.11.7"
 lazy val common = project in file(".")
 
 libraryDependencies ++= Seq(
-  "com.yukihirai0505" % "scala-request-json_2.11" % "1.3"
+  "com.yukihirai0505" % "scala-request-json_2.11" % "1.4"
 )
 
 // when library release, it should be false
