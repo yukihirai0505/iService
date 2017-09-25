@@ -1,4 +1,4 @@
-package com.yukihirai0505.iFollower.responses
+package com.yukihirai0505.iService.responses
 
 import play.api.libs.json.Json
 
@@ -23,13 +23,13 @@ object ProfilePage {
   implicit val ProfilePageFormat = JsonNaming.snakecase(Json.format[ProfilePage])
 }
 
-case class EntryData(ProfilePage: Seq[ProfilePage])
+case class AccountEntryData(ProfilePage: Seq[ProfilePage])
 
-object EntryData {
-  implicit val EntryDataFormat = JsonNaming.snakecase(Json.format[EntryData])
+object AccountEntryData {
+  implicit val AccountEntryDataFormat = JsonNaming.snakecase(Json.format[AccountEntryData])
 }
 
-case class AccountData(entryData: EntryData)
+case class AccountData(entryData: AccountEntryData)
 
 object AccountData {
   implicit val AccountDataFormat = JsonNaming.snakecase(Json.format[AccountData])

@@ -1,22 +1,22 @@
-package com.yukihirai0505.iMedia.responses
+package com.yukihirai0505.iService.responses
 
 import com.github.tototoshi.play.json.JsonNaming
 import play.api.libs.json.Json
 
 // TODO: parameters
-case class Node(caption: String, code: String, id: String, isVideo: Boolean)
+case class MediaNode(caption: String, code: String, id: String, isVideo: Boolean)
 
-object Node {
-  implicit val NodeFormat = JsonNaming.snakecase(Json.format[Node])
+object MediaNode {
+  implicit val MediaNodeFormat = JsonNaming.snakecase(Json.format[MediaNode])
 }
 
-case class Media(nodes: Seq[Node], count: Long)
+case class Media(nodes: Seq[MediaNode], count: Long)
 
 object Media {
   implicit val ShortcodeMediaFormat = JsonNaming.snakecase(Json.format[Media])
 }
 
-case class TopPosts(nodes: Seq[Node])
+case class TopPosts(nodes: Seq[MediaNode])
 
 object TopPosts {
   implicit val TopPostsFormat = JsonNaming.snakecase(Json.format[TopPosts])
@@ -34,13 +34,13 @@ object TagPage {
   implicit val TagPageFormat = JsonNaming.snakecase(Json.format[TagPage])
 }
 
-case class EntryData(TagPage: Seq[TagPage])
+case class MediaEntryData(TagPage: Seq[TagPage])
 
-object EntryData {
-  implicit val EntryDataFormat = JsonNaming.snakecase(Json.format[EntryData])
+object MediaEntryData {
+  implicit val MediaEntryDataFormat = JsonNaming.snakecase(Json.format[MediaEntryData])
 }
 
-case class MediaData(entryData: EntryData)
+case class MediaData(entryData: MediaEntryData)
 
 object MediaData {
   implicit val MediaDataFormat = JsonNaming.snakecase(Json.format[MediaData])

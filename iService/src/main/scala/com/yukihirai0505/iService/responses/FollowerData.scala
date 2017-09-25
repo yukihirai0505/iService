@@ -1,8 +1,7 @@
-package com.yukihirai0505.iFollower.responses
-
-import play.api.libs.json.Json
+package com.yukihirai0505.iService.responses
 
 import com.github.tototoshi.play.json.JsonNaming
+import play.api.libs.json.Json
 
 
 case class PageInfo(endCursor: String, hasNextPage: Boolean)
@@ -17,13 +16,13 @@ object NodeUser {
   implicit val NodeUserFormat = JsonNaming.snakecase(Json.format[NodeUser])
 }
 
-case class Node(node: NodeUser)
+case class Edges(node: NodeUser)
 
-object Node {
-  implicit val NodeFormat = JsonNaming.snakecase(Json.format[Node])
+object Edges {
+  implicit val EdgesFormat = JsonNaming.snakecase(Json.format[Edges])
 }
 
-case class EdgeFollowedBy(count: Long, edges: Seq[Node], pageInfo: PageInfo)
+case class EdgeFollowedBy(count: Long, edges: Seq[Edges], pageInfo: PageInfo)
 
 object EdgeFollowedBy {
   implicit val EdgeFollowedByFormat = JsonNaming.snakecase(Json.format[EdgeFollowedBy])

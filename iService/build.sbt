@@ -1,4 +1,4 @@
-name := """iMedia"""
+name := """iService"""
 
 version := "1.0"
 
