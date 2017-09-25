@@ -1,6 +1,6 @@
-name := """iFollower"""
+name := """iMedia"""
 
-version := "2.1"
+version := "1.0"
 
 scalaVersion := "2.11.7"
 
