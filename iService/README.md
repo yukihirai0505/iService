@@ -24,10 +24,6 @@ Using browser url
 import java.io.File
 
 import com.yukihirai0505.iService.IService
-import org.scalatest._
-
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
