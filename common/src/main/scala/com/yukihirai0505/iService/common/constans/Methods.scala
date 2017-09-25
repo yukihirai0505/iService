@@ -18,6 +18,7 @@ object Methods {
     val CREATE_UPLOAD_PHOTO = s"${TOP}create/upload/photo/"
     val CREATE_CONFIGURE = s"${TOP}create/configure/"
     val FOLLOWER_QUERY: (Int) => String = (queryNum: Int) => s"${TOP}graphql/query/?query_id=17851374694183129&first=$queryNum"
+    val WEB_LIKES_LIKE: (String) => String = (mediaId: String) => s"${TOP}web/likes/$mediaId/like/"
     val ACCOUNT_URL = s"$TOP%s/"
     val HASH_TAG_URL: (String) => String = (hashTag: String) => s"${TOP}explore/tags/$hashTag/"
   }
