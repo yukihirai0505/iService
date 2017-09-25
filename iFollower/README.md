@@ -9,10 +9,10 @@ If you don't have it already, make sure you add the Maven Central as resolver in
 You need to include the library as your dependency:
 
 ```scala
-libraryDependencies += "com.yukihirai0505" % "ifollower_2.11" % "2.0"
+libraryDependencies += "com.yukihirai0505" % "ifollower_2.11" % "2.1"
 ```
 
-https://search.maven.org/#artifactdetails%7Ccom.yukihirai0505%7Cifollower_2.11%7C2.0%7Cjar
+https://search.maven.org/#artifactdetails%7Ccom.yukihirai0505%7Cifollower_2.11%7C2.1%7Cjar
 
 ## Example
 
