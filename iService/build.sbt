@@ -33,7 +33,7 @@ organizationName := "com.yukihirai0505"
 
 organizationHomepage := Some(url("https://yukihirai0505.github.io"))
 
-description := "A Scala library for the Instagram"
+description := "A Scala library for Instagram"
 
 pomExtra :=
   <url>https://github.com/yukihirai0505/iService</url>
