@@ -4,7 +4,7 @@ import com.github.tototoshi.play.json.JsonNaming
 import play.api.libs.json.Json
 
 // TODO: parameters
-case class MediaNode(caption: String, code: String, id: String, isVideo: Boolean)
+case class MediaNode(caption: Option[String], code: String, id: String, isVideo: Boolean)
 
 object MediaNode {
   implicit val MediaNodeFormat = JsonNaming.snakecase(Json.format[MediaNode])
