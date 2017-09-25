@@ -8,8 +8,8 @@ import com.ning.http.client.multipart.{FilePart, StringPart}
 import com.yukihirai0505.com.scala.Request
 import com.yukihirai0505.com.scala.model.Response
 import com.yukihirai0505.iService.constans.{ContentType, Methods}
-import com.yukihirai0505.iService.utils.ReqUtil
 import com.yukihirai0505.iService.responses._
+import com.yukihirai0505.iService.utils.ReqUtil
 import dispatch.{Http, Req}
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
