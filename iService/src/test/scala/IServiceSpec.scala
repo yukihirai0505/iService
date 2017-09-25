@@ -32,4 +32,13 @@ class IServiceSpec extends FlatSpec with Matchers {
     }
     true should ===(true)
   }
+
+  "iLike" should "like to media" in {
+    Await.result(iService.likeMedia(mediaId = "1611347561905376396", "BZcqBH9D8yM"), Duration.Inf) match {
+      case Right(v) => println(v.status)
+      case Left(e) => println("failed", e)
+    }
+    true should ===(true)
+  }
+
 }

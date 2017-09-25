@@ -12,7 +12,7 @@ import scala.concurrent.ExecutionContext
 /**
   * Created by Yuky on 2017/09/25.
   */
-object Media {
+object MediaService {
   def getPosts(hashTag: String, cookies: List[Cookie])
               (implicit ec: ExecutionContext): Future[Tag] = {
     val hashTagUrl: String = s"${Methods.Natural.HASH_TAG_URL(hashTag)}"

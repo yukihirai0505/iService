@@ -4,8 +4,10 @@ import com.ning.http.client.cookie.Cookie
 import com.typesafe.scalalogging.LazyLogging
 import com.yukihirai0505.iService.common.InstagramUser
 import com.yukihirai0505.iService.common.constans.Methods
+import com.yukihirai0505.iService.common.models.Status
 import com.yukihirai0505.iService.responses._
-import com.yukihirai0505.iService.services.Follower.{getFollower, getUserInfo}
+import com.yukihirai0505.iService.services.FollowerService.{getFollower, getUserInfo}
+import com.yukihirai0505.iService.services.{LikeService, MediaService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -22,11 +24,17 @@ class IService(username: String, password: String) extends InstagramUser(usernam
       }
     }
 
-    commonAction[Seq[Edges]](execute)
+    commonAction(execute)
   }
 
   def getSearchHashTagResult(hashTag: String): Future[Either[Throwable, Tag]] = {
-    def execute(cookies: List[Cookie]) = services.Media.getPosts(hashTag, cookies).flatMap { tag => Future successful Right(tag) }
+    def execute(cookies: List[Cookie]) = MediaService.getPosts(hashTag, cookies).flatMap { tag => Future successful Right(tag) }
+
+    commonAction(execute)
+  }
+
+  def likeMedia(mediaId: String, shortcode: String): Future[Either[Throwable, Status]] = {
+    def execute(cookies: List[Cookie]) = LikeService.likeMedia(mediaId, shortcode, cookies)
 
     commonAction(execute)
   }

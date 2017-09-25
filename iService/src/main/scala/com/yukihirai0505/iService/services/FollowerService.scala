@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext
 /**
   * Created by Yuky on 2017/09/25.
   */
-object Follower {
+object FollowerService {
   def getUserInfo(targetAccountName: String, cookies: List[Cookie])
                  (implicit ec: ExecutionContext): Future[ProfileUserData] = {
     val baseUrl = Methods.Natural.ACCOUNT_URL format targetAccountName
