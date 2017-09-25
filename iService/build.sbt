@@ -1,18 +1,14 @@
 name := """iService"""
 
-version := "1.0"
+version := "1.0.0"
 
 scalaVersion := "2.11.7"
-
-lazy val common = ProjectRef(file("../common"), "common")
-lazy val iFollower = (project in file("./"))
-  .dependsOn(common)
-  .aggregate(common)
 
 libraryDependencies ++= Seq(
   // Log
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
+  "com.yukihirai0505" % "scala-request-json_2.11" % "1.4",
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
 
@@ -37,7 +33,7 @@ organizationName := "com.yukihirai0505"
 
 organizationHomepage := Some(url("https://yukihirai0505.github.io"))
 
-description := "A Scala library for the Instagram Follower"
+description := "A Scala library for the Instagram"
 
 pomExtra :=
   <url>https://github.com/yukihirai0505/iService</url>

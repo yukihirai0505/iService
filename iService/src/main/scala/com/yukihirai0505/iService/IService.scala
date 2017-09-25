@@ -1,11 +1,11 @@
 package com.yukihirai0505.iService
 
+import java.io.File
+
 import com.ning.http.client.cookie.Cookie
 import com.typesafe.scalalogging.LazyLogging
-import com.yukihirai0505.iService.common.InstagramUser
-import com.yukihirai0505.iService.common.constans.Methods
-import com.yukihirai0505.iService.common.models.Status
-import com.yukihirai0505.iService.responses._
+import com.yukihirai0505.iService.constans.Methods
+import com.yukihirai0505.iService.responses.{Status, _}
 import com.yukihirai0505.iService.services.FollowerService.{getFollower, getUserInfo}
 import com.yukihirai0505.iService.services.{LikeService, MediaService}
 
@@ -35,6 +35,12 @@ class IService(username: String, password: String) extends InstagramUser(usernam
 
   def likeMedia(mediaId: String, shortcode: String): Future[Either[Throwable, Status]] = {
     def execute(cookies: List[Cookie]) = LikeService.likeMedia(mediaId, shortcode, cookies)
+
+    commonAction(execute)
+  }
+
+  def postNaturalWays(postImage: File, caption: String): Future[Either[Throwable, Status]] = {
+    def execute(cookies: List[Cookie]) = MediaService.postNaturalWays(postImage, caption, cookies)
 
     commonAction(execute)
   }

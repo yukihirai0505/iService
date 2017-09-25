@@ -3,9 +3,9 @@ package com.yukihirai0505.iService.services
 import com.ning.http.client.cookie.Cookie
 import com.yukihirai0505.com.scala.Request
 import com.yukihirai0505.com.scala.model.Response
-import com.yukihirai0505.iService.common.constans.Methods
-import com.yukihirai0505.iService.common.models.Status
-import com.yukihirai0505.iService.common.utils.ReqUtil
+import com.yukihirai0505.iService.constans.Methods
+import com.yukihirai0505.iService.responses.Status
+import com.yukihirai0505.iService.utils.ReqUtil
 import dispatch.Req
 
 import scala.concurrent.{ExecutionContext, Future}

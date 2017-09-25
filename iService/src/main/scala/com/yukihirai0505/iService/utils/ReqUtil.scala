@@ -1,10 +1,10 @@
-package com.yukihirai0505.iService.common.utils
+package com.yukihirai0505.iService.utils
 
 import com.ning.http.client.cookie.Cookie
 import com.yukihirai0505.com.scala.Request
 import com.yukihirai0505.com.scala.constants.Verbs
-import com.yukihirai0505.iService.common.constans.ContentType
-import com.yukihirai0505.iService.common.constans.Constants._
+import com.yukihirai0505.iService.constans.ContentType
+import com.yukihirai0505.iService.constans.Constants._
 import dispatch.{Future, Http, Req}
 
 import scala.collection.JavaConversions._

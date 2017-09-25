@@ -1,4 +1,4 @@
-package com.yukihirai0505.iService.common.constans
+package com.yukihirai0505.iService.constans
 
 /**
   * author Yuki Hirai on 2017/05/30.

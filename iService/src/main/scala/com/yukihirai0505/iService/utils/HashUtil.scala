@@ -1,9 +1,9 @@
-package com.yukihirai0505.iService.common.utils
+package com.yukihirai0505.iService.utils
 
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-import com.yukihirai0505.iService.common.constans.Constants.{HMAC_SHA256, UTF8}
+import com.yukihirai0505.iService.constans.Constants.{HMAC_SHA256, UTF8}
 
 /**
   * author Yuki Hirai on 2017/05/30.

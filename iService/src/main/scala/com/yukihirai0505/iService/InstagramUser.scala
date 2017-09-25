@@ -1,9 +1,9 @@
-package com.yukihirai0505.iService.common
+package com.yukihirai0505.iService
 
 import com.ning.http.client.cookie.Cookie
-import com.yukihirai0505.iService.common.constans.Methods.Natural
-import com.yukihirai0505.iService.common.constans.{ContentType, Methods}
-import com.yukihirai0505.iService.common.utils.ReqUtil
+import com.yukihirai0505.iService.constans.Methods.Natural
+import com.yukihirai0505.iService.constans.{ContentType, Methods}
+import com.yukihirai0505.iService.utils.ReqUtil
 import dispatch.Future
 
 import scala.concurrent.ExecutionContext.Implicits.global
