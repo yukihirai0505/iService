@@ -1,6 +1,7 @@
 package com.yukihirai0505.iService
 
 import java.io.File
+import java.net.URLEncoder
 
 import com.ning.http.client.cookie.Cookie
 import com.typesafe.scalalogging.LazyLogging

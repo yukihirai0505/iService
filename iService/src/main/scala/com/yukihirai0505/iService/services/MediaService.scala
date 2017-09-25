@@ -1,6 +1,7 @@
 package com.yukihirai0505.iService.services
 
 import java.io.File
+import java.net.URLEncoder
 
 import com.ning.http.client.cookie.Cookie
 import com.ning.http.client.multipart.{FilePart, StringPart}
@@ -20,7 +21,7 @@ import scala.concurrent.{ExecutionContext, Future}
 object MediaService {
   def getPosts(hashTag: String, cookies: List[Cookie])
               (implicit ec: ExecutionContext): Future[Tag] = {
-    val hashTagUrl: String = s"${Methods.Natural.HASH_TAG_URL(hashTag)}"
+    val hashTagUrl: String = s"${Methods.Natural.HASH_TAG_URL(URLEncoder.encode(hashTag, "UTF-8"))}"
     val req: Req = ReqUtil.getNaturalReq(hashTagUrl, cookies).setMethod("GET")
     Http(req).map { resp =>
       val pattern = """<script type="text/javascript">window._sharedData =([\s\S]*?);</script>""".r
