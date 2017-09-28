@@ -9,7 +9,7 @@ import com.yukihirai0505.com.scala.Request
 import com.yukihirai0505.com.scala.model.Response
 import com.yukihirai0505.iService.constans.{ContentType, Methods}
 import com.yukihirai0505.iService.responses._
-import com.yukihirai0505.iService.utils.ReqUtil
+import com.yukihirai0505.iService.utils.{NumberUtil, ReqUtil}
 import dispatch.{Http, Req}
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
@@ -41,8 +41,8 @@ object MediaService {
 
   def postNaturalWays(postImage: File, caption: String, cookies: List[Cookie])
                      (implicit ec: ExecutionContext): Future[Either[Throwable, Status]] = {
-    def uploadPhoto(postImage: File, cookies: List[Cookie], sleepTime: Int = 3000): Future[Either[Throwable, String]] = {
-      Thread.sleep(sleepTime)
+    def uploadPhoto(postImage: File, cookies: List[Cookie]): Future[Either[Throwable, String]] = {
+      Thread.sleep(NumberUtil.getRandomInt())
       val uploadId = System.currentTimeMillis.toString
       val req: Req = ReqUtil.getNaturalReq(Methods.Natural.CREATE_UPLOAD_PHOTO, cookies, isAjax = true)
         .setMethod("POST")
@@ -56,8 +56,8 @@ object MediaService {
       }
     }
 
-    def createConfigure(uploadId: String, caption: String, cookies: List[Cookie], sleepTime: Int = 5000): Future[Either[Throwable, Status]] = {
-      Thread.sleep(sleepTime)
+    def createConfigure(uploadId: String, caption: String, cookies: List[Cookie]): Future[Either[Throwable, Status]] = {
+      Thread.sleep(NumberUtil.getRandomInt())
       val body = Map(
         "upload_id" -> uploadId,
         "caption" -> caption

@@ -3,7 +3,7 @@ package com.yukihirai0505.iService
 import com.ning.http.client.cookie.Cookie
 import com.yukihirai0505.iService.constans.Methods.Natural
 import com.yukihirai0505.iService.constans.{ContentType, Methods}
-import com.yukihirai0505.iService.utils.ReqUtil
+import com.yukihirai0505.iService.utils.{NumberUtil, ReqUtil}
 import dispatch.Future
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -24,8 +24,8 @@ class InstagramUser(username: String, password: String) {
     *
     * @return
     */
-  private def top(cookies: List[Cookie] = List.empty[Cookie], sleepTime: Int = 0): Future[List[Cookie]] = {
-    Thread.sleep(sleepTime)
+  private def top(cookies: List[Cookie] = List.empty[Cookie]): Future[List[Cookie]] = {
+    Thread.sleep(NumberUtil.getRandomInt())
     val req = ReqUtil.getNaturalReq(Natural.TOP, cookies)
     ReqUtil.sendRequest(req)
   }
@@ -36,8 +36,8 @@ class InstagramUser(username: String, password: String) {
     * @param cookies
     * @return
     */
-  private def loginToInstagram(cookies: List[Cookie], sleepTime: Int = 3000): Future[List[Cookie]] = {
-    Thread.sleep(sleepTime)
+  private def loginToInstagram(cookies: List[Cookie]): Future[List[Cookie]] = {
+    Thread.sleep(NumberUtil.getRandomInt())
     val body = Map(
       "username" -> username,
       "password" -> password
