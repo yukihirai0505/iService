@@ -9,10 +9,10 @@ If you don't have it already, make sure you add the Maven Central as resolver in
 You need to include the library as your dependency:
 
 ```scala
-libraryDependencies += "com.yukihirai0505" % "iservice_2.11" % "1.0.0"
+libraryDependencies += "com.yukihirai0505" % "iservice_2.11" % "2.0.0"
 ```
 
-https://search.maven.org/#artifactdetails%7Ccom.yukihirai0505%7Ciservice_2.11%7C1.0.0%7Cjar
+https://search.maven.org/#artifactdetails%7Ccom.yukihirai0505%7Ciservice_2.11%7C2.0.0%7Cjar
 
 ## Example
 
