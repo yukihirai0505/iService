@@ -8,6 +8,7 @@ import com.yukihirai0505.iService.constans.Methods
 import com.yukihirai0505.iService.responses.{Status, _}
 import com.yukihirai0505.iService.services.FollowerService.{getFollower, getUserInfo}
 import com.yukihirai0505.iService.services.{LikeService, MediaService}
+import com.yukihirai0505.iService.utils.NumberUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -47,6 +48,7 @@ class IService(username: String, password: String) extends InstagramUser(usernam
 
   private def commonAction[T](execute: (List[Cookie]) => Future[Either[Throwable, T]]) = {
     login().flatMap { cookies: List[Cookie] =>
+      Thread.sleep(NumberUtil.getRandomInt())
       execute(cookies)
     }.recover { case e: Exception => Left(e) }
   }
