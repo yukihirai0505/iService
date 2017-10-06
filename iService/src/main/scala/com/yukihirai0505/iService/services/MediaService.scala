@@ -26,6 +26,15 @@ object MediaService extends BaseService {
     requestWebPage[MediaData](req).flatMap(v => Future successful v.entryData.TagPage.head.tag)
   }
 
+  def getPostsPaging(tagName: String, afterCode: String) = {
+    val pagingUrl: String = s"${Methods.Natural.HASH_TAG_QUERY(tagName, afterCode)}"
+    val req: Req = ReqUtil.getNaturalReq(pagingUrl)
+    Request.sendRequestJson[](req).flatMap {
+      case Response(Some(v), _) => Future successful Right(v)
+      case _ => Future successful Left(throw new RuntimeException("getPostsPaging failed"))
+    }
+  }
+
   def postNaturalWays(postImage: File, caption: String, cookies: List[Cookie])
                      (implicit ec: ExecutionContext): Future[Either[Throwable, Status]] = {
     def uploadPhoto(postImage: File, cookies: List[Cookie]): Future[Either[Throwable, String]] = {
