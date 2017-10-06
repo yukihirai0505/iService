@@ -10,7 +10,7 @@ object MediaNode {
   implicit val MediaNodeFormat = JsonNaming.snakecase(Json.format[MediaNode])
 }
 
-case class Media(nodes: Seq[MediaNode], count: Long)
+case class Media(nodes: Seq[MediaNode], count: Long, pageInfo: PageInfo)
 
 object Media {
   implicit val ShortcodeMediaFormat = JsonNaming.snakecase(Json.format[Media])

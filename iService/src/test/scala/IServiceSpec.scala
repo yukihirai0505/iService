@@ -12,14 +12,14 @@ class IServiceSpec extends FlatSpec with Matchers {
   val iService = new IService(username, password)
 
   "iFollower" should "get instagram followers" in {
-    import java.io.{FileOutputStream => FileStream, OutputStreamWriter => StreamWriter};
+    import java.io.{FileOutputStream => FileStream, OutputStreamWriter => StreamWriter}
     val fileName = "followers.txt"
     val encode = "UTF-8"
     val append = true
     val fileOutPutStream = new FileStream(fileName, append)
     val writer = new StreamWriter(fileOutPutStream, encode)
     // queryNum has limit (until 9999), but 9999 request will cause error. so it is better to set small number as you can.
-    Await.result(iService.getFollowers(targetAccountName = "i_do_not_like_holidays"), Duration.Inf) match {
+    Await.result(iService.getFollowers(targetAccountName = "i_do_not_like_fashion"), Duration.Inf) match {
       case Right(v) => v.foreach(n => writer.write(s"${n.node.username}\n"))
       case Left(e) => println("failed", e)
     }
@@ -29,7 +29,10 @@ class IServiceSpec extends FlatSpec with Matchers {
 
   "iMedia" should "get hash tag search result" in {
     Await.result(iService.getSearchHashTagResult(hashTag = "like4like"), Duration.Inf) match {
-      case Right(v) => v.media.nodes.foreach(println)
+      case Right(v) =>
+        println(s"hasNextPage: ${v.media.pageInfo.hasNextPage}")
+        println(s"endCursor: ${v.media.pageInfo.endCursor}")
+        v.media.nodes.foreach(println)
       case Left(e) => println("failed", e)
     }
     true should ===(true)
