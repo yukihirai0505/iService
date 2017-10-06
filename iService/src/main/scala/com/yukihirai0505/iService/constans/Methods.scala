@@ -22,6 +22,7 @@ object Methods {
     val WEB_LIKES_LIKE: (String) => String = (mediaId: String) => s"${TOP}web/likes/$mediaId/like/"
     val ACCOUNT_URL = s"$TOP%s/"
     val HASH_TAG_URL: (String) => String = (hashTag: String) => s"${TOP}explore/tags/$hashTag/"
-    val HASH_TAG_QUERY: (String, String) => String = (tagName: String, afterCode: String) => s"$TOP${GRAPHQL}17875800862117404&&variables=%7B%22tag_name%22%3A%22$tagName%22%2C%22first%22%3A9%2C%22after%22%3A%22$afterCode%22%7D"
+    val HASH_TAG_QUERY: (String, String) => String = (tagName: String, afterCode: String) =>
+      s"$TOP${GRAPHQL}17875800862117404&&variables=%7B%22tag_name%22%3A%22$tagName%22%2C%22first%22%3A9%2C%22after%22%3A%22$afterCode%22%7D"
   }
 }

@@ -4,33 +4,21 @@ import com.ning.http.client.cookie.Cookie
 import com.yukihirai0505.com.scala.Request
 import com.yukihirai0505.com.scala.model.Response
 import com.yukihirai0505.iService.constans.Methods
-import com.yukihirai0505.iService.utils.ReqUtil
 import com.yukihirai0505.iService.responses.{AccountData, Edges, FollowerData, ProfileUserData}
-import dispatch.{Future, Http, Req}
-import play.api.libs.json.{JsError, JsSuccess, Json}
+import com.yukihirai0505.iService.utils.ReqUtil
+import dispatch.{Future, Req}
 
 import scala.concurrent.ExecutionContext
 
 /**
   * Created by Yuky on 2017/09/25.
   */
-object FollowerService {
+object FollowerService extends BaseService {
   def getUserInfo(targetAccountName: String, cookies: List[Cookie])
                  (implicit ec: ExecutionContext): Future[ProfileUserData] = {
     val baseUrl = Methods.Natural.ACCOUNT_URL format targetAccountName
     val req: Req = ReqUtil.getNaturalReq(baseUrl, cookies)
-    Http(req).map { resp =>
-      val pattern = """<script type="text/javascript">window._sharedData =([\s\S]*?);</script>""".r
-      val response = resp.getResponseBody
-      if (resp.getStatusCode != 200) throw new Exception(response.toString)
-      pattern.findFirstMatchIn(response).fold(throw new RuntimeException("couldn't get user info")) { m =>
-        Json.parse(m.group(1)).validate[AccountData] match {
-          case JsError(e) => throw new RuntimeException(e.toString())
-          case JsSuccess(value, _) =>
-            value.entryData.ProfilePage.head.user
-        }
-      }
-    }
+    requestWebPage[AccountData](req).flatMap(v => Future successful v.entryData.ProfilePage.head.user)
   }
 
   def getFollower(baseUrl: String, cookies: List[Cookie], afterCode: Option[String] = None, nodes: Seq[Edges] = Seq.empty)
