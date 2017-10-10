@@ -22,30 +22,6 @@ object EdgeMediaToCaption {
   implicit val EdgeMediaToCaptionFormat = JsonNaming.snakecase(Json.format[EdgeMediaToCaption])
 }
 
-case class EdgeMediaToComment(count: Long)
-
-object EdgeMediaToComment {
-  implicit val EdgeMediaToCommentFormat = JsonNaming.snakecase(Json.format[EdgeMediaToComment])
-}
-
-case class Dimensions(height: Int, width: Int)
-
-object Dimensions {
-  implicit val DimensionsFormat = JsonNaming.snakecase(Json.format[Dimensions])
-}
-
-case class EdgeLikedBy(count: Long)
-
-object EdgeLikedBy {
-  implicit val EdgeLikedByFormat = JsonNaming.snakecase(Json.format[EdgeLikedBy])
-}
-
-case class Owner(id: String)
-
-object Owner {
-  implicit val OwnerFormat = JsonNaming.snakecase(Json.format[Owner])
-}
-
 case class MediaQueryNode(
                            commentsDisabled: Boolean,
                            id: String,
@@ -55,9 +31,9 @@ case class MediaQueryNode(
                            displayUrl: String,
                            isVideo: Boolean,
                            edgeMediaToCaption: EdgeMediaToCaption,
-                           edgeMediaToComment: EdgeMediaToComment,
+                           edgeMediaToComment: Count,
                            dimensions: Dimensions,
-                           edgeLikedBy: EdgeLikedBy,
+                           edgeLikedBy: Count,
                            owner: Owner
                          )
 
