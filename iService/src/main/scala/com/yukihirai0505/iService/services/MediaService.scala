@@ -74,7 +74,9 @@ object MediaService extends BaseService {
     }
   }
 
-  def deletePhoto(mediaId: String, shortcode: String, cookies: List[Cookie]): Future[Either[Throwable, Status]] = {
+  def deletePhoto(mediaId: String, shortcode: String, cookies: List[Cookie])
+                 (implicit ec: ExecutionContext): Future[Either[Throwable, Status]] = {
+    Thread.sleep(NumberUtil.getRandomInt())
     val req: Req = ReqUtil.getNaturalReq(Methods.Natural.CREATE_DELETE_PHOTO(mediaId), cookies, isAjax = true)
       .setMethod("POST")
       .addHeader("Referer", s"https://www.instagram.com/p/$shortcode/")

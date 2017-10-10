@@ -13,12 +13,17 @@ import scala.concurrent.ExecutionContext
 /**
   * Created by Yuky on 2017/09/25.
   */
-object FollowerService extends BaseService {
+object UserService extends BaseService {
   def getUserInfo(targetAccountName: String, cookies: List[Cookie])
-                 (implicit ec: ExecutionContext): Future[ProfileUserData] = {
+                 (implicit ec: ExecutionContext): Future[Either[Throwable, ProfileUserData]] = {
     val baseUrl = Methods.Natural.ACCOUNT_URL format targetAccountName
     val req: Req = ReqUtil.getNaturalReq(baseUrl, cookies)
-    requestWebPage[AccountData](req).flatMap(v => Future successful v.entryData.ProfilePage.head.user)
+    requestWebPage[AccountData](req).flatMap { v =>
+      v.entryData.ProfilePage.headOption match {
+        case Some(p) => Future successful Right(p.user)
+        case None => Future successful Left(throw new RuntimeException("no user data"))
+      }
+    }
   }
 
   def getFollower(baseUrl: String, cookies: List[Cookie], afterCode: Option[String] = None, nodes: Seq[Edges] = Seq.empty)

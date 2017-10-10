@@ -1,6 +1,7 @@
 import java.io.File
 
 import com.yukihirai0505.iService.IService
+import com.yukihirai0505.iService.services.MediaService
 import org.scalatest._
 
 import scala.concurrent.Await
@@ -66,4 +67,17 @@ class IServiceSpec extends FlatSpec with Matchers {
     status shouldEqual "ok"
   }
 
+  "deletePhotos" should "delete photos" in {
+    val status = Await.result(iService.getUserInfo(username), Duration.Inf) match {
+      case Right(userData) =>
+        userData.media.nodes.foreach { n =>
+          Await.result(iService.deletePhoto(n.id, n.code), Duration.Inf)
+        }
+        "ok"
+      case Left(e) =>
+        println("failed", e)
+        ""
+    }
+    status shouldEqual "ok"
+  }
 }
