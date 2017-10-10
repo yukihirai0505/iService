@@ -1,8 +1,7 @@
 package com.yukihirai0505.iService.responses
 
-import play.api.libs.json.Json
-
 import com.github.tototoshi.play.json.JsonNaming
+import play.api.libs.json.Json
 
 
 case class FollowedBy(count: Long)

@@ -10,14 +10,16 @@ import com.yukihirai0505.iService.constans.Constants.{HMAC_SHA256, UTF8}
   */
 object HashUtil {
 
-  /***
+  /** *
     * Create UUID
-     * @return
+    *
+    * @return
     */
   def createUUID: String = java.util.UUID.randomUUID.toString
 
-  /***
+  /** *
     * Create HmacSHA256 hash
+    *
     * @param s
     * @param secret
     * @return

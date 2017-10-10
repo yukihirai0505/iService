@@ -1,6 +1,5 @@
 package com.yukihirai0505.iService.responses
 
-// TODO: hashTagQueryResultをcase classに落とし込み
 
 import com.github.tototoshi.play.json.JsonNaming
 import play.api.libs.json.Json
@@ -23,26 +22,29 @@ object EdgeMediaToCaption {
   implicit val EdgeMediaToCaptionFormat = JsonNaming.snakecase(Json.format[EdgeMediaToCaption])
 }
 
-/**
-  *           {
-            "node": {
-              "edge_media_to_comment": {
-                "count": 1
-              },
-              "dimensions": {
-                "height": 1080,
-                "width": 1080
-              },
-              "edge_liked_by": {
-                "count": 1155
-              },
-              "owner": {
-                "id": "2080636766"
-              }
-            }
-          }
-  */
+case class EdgeMediaToComment(count: Long)
 
+object EdgeMediaToComment {
+  implicit val EdgeMediaToCommentFormat = JsonNaming.snakecase(Json.format[EdgeMediaToComment])
+}
+
+case class Dimensions(height: Int, width: Int)
+
+object Dimensions {
+  implicit val DimensionsFormat = JsonNaming.snakecase(Json.format[Dimensions])
+}
+
+case class EdgeLikedBy(count: Long)
+
+object EdgeLikedBy {
+  implicit val EdgeLikedByFormat = JsonNaming.snakecase(Json.format[EdgeLikedBy])
+}
+
+case class Owner(id: String)
+
+object Owner {
+  implicit val OwnerFormat = JsonNaming.snakecase(Json.format[Owner])
+}
 
 case class MediaQueryNode(
                            commentsDisabled: Boolean,
@@ -54,6 +56,9 @@ case class MediaQueryNode(
                            isVideo: Boolean,
                            edgeMediaToCaption: EdgeMediaToCaption,
                            edgeMediaToComment: EdgeMediaToComment,
+                           dimensions: Dimensions,
+                           edgeLikedBy: EdgeLikedBy,
+                           owner: Owner
                          )
 
 object MediaQueryNode {

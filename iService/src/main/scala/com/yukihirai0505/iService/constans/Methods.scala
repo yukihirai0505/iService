@@ -18,6 +18,7 @@ object Methods {
     val ACCOUNTS_LOGIN_AJAX = s"${TOP}accounts/login/ajax/"
     val CREATE_UPLOAD_PHOTO = s"${TOP}create/upload/photo/"
     val CREATE_CONFIGURE = s"${TOP}create/configure/"
+    val CREATE_DELETE_PHOTO: (String) => String = (mediaId: String) => s"${TOP}create/$mediaId/delete/"
     val FOLLOWER_QUERY: (Int) => String = (queryNum: Int) => s"$TOP${GRAPHQL}17851374694183129&first=$queryNum"
     val WEB_LIKES_LIKE: (String) => String = (mediaId: String) => s"${TOP}web/likes/$mediaId/like/"
     val ACCOUNT_URL = s"$TOP%s/"
@@ -25,4 +26,5 @@ object Methods {
     val HASH_TAG_QUERY: (String, String) => String = (tagName: String, afterCode: String) =>
       s"$TOP${GRAPHQL}17875800862117404&&variables=%7B%22tag_name%22%3A%22$tagName%22%2C%22first%22%3A9%2C%22after%22%3A%22$afterCode%22%7D"
   }
+
 }

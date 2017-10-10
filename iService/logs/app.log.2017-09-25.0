@@ -1,9 +1,0 @@
-2017-09-25 14:02:24.327 [ForkJoinPool-1-worker-5] INFO  com.yukihirai0505.iService.IService - userId: 4856871817 followedBy: 115
-2017-09-25 14:21:38.285 [ForkJoinPool-1-worker-3] INFO  com.yukihirai0505.iService.IService - userId: 4856871817 followedBy: 115
-2017-09-25 14:32:51.480 [ForkJoinPool-1-worker-5] INFO  com.yukihirai0505.iService.IService - userId: 4856871817 followedBy: 115
-2017-09-25 14:34:19.257 [ForkJoinPool-1-worker-5] INFO  com.yukihirai0505.iService.IService - userId: 4856871817 followedBy: 115
-2017-09-25 14:58:46.872 [ForkJoinPool-1-worker-5] INFO  com.yukihirai0505.iService.IService - userId: 4856871817 followedBy: 115
-2017-09-25 15:06:17.727 [ForkJoinPool-1-worker-5] INFO  com.yukihirai0505.iService.IService - userId: 4856871817 followedBy: 115
-2017-09-25 15:07:01.912 [ForkJoinPool-1-worker-5] INFO  com.yukihirai0505.iService.IService - userId: 4856871817 followedBy: 115
-2017-09-25 15:14:39.751 [ForkJoinPool-1-worker-5] INFO  com.yukihirai0505.iService.IService - userId: 4856871817 followedBy: 115
-2017-09-25 18:03:28.596 [ForkJoinPool-1-worker-3] INFO  com.yukihirai0505.iService.IService - userId: 4856871817 followedBy: 115

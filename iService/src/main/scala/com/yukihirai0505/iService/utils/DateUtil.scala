@@ -5,9 +5,10 @@ package com.yukihirai0505.iService.utils
   */
 object DateUtil {
 
-  /***
+  /** *
     * Create timestamp
-     * @return
+    *
+    * @return
     */
   def timestamp: String = {
     (System.currentTimeMillis / 1000).toString

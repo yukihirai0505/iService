@@ -9,13 +9,13 @@ import com.yukihirai0505.com.scala.Request
 import com.yukihirai0505.com.scala.model.Response
 import com.yukihirai0505.iService.constans.Constants.{HASH_HMAC_KEY, UTF8}
 import com.yukihirai0505.iService.constans.Methods
-import com.yukihirai0505.iService.utils.{DateUtil, HashUtil, NumberUtil, ReqUtil}
 import com.yukihirai0505.iService.responses.{Login, MediaConfigure, MediaUpload}
+import com.yukihirai0505.iService.utils.{DateUtil, HashUtil, NumberUtil, ReqUtil}
 import dispatch.Req
 import play.api.libs.json.Json
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Created by Yuky on 2017/09/25.
