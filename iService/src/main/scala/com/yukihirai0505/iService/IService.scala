@@ -46,6 +46,12 @@ class IService(username: String, password: String) extends InstagramUser(usernam
     commonAction(execute)
   }
 
+  def deletePhoto(mediaId: String, shortcode: String): Future[Either[Throwable, Status]] = {
+    def execute(cookies: List[Cookie]) = MediaService.deletePhoto(mediaId, shortcode, cookies)
+
+    commonAction(execute)
+  }
+
   private def commonAction[T](execute: (List[Cookie]) => Future[Either[Throwable, T]]) = {
     login().flatMap { cookies: List[Cookie] =>
       Thread.sleep(NumberUtil.getRandomInt())

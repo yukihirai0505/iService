@@ -26,10 +26,11 @@ object MediaService extends BaseService {
     requestWebPage[MediaData](req).flatMap(v => Future successful v.entryData.TagPage.head.tag)
   }
 
-  def getPostsPaging(tagName: String, afterCode: String) = {
+  def getPostsPaging(tagName: String, afterCode: String)
+                    (implicit ec: ExecutionContext): Future[Either[Throwable, MediaQuery]] = {
     val pagingUrl: String = s"${Methods.Natural.HASH_TAG_QUERY(tagName, afterCode)}"
     val req: Req = ReqUtil.getNaturalReq(pagingUrl)
-    Request.sendRequestJson[](req).flatMap {
+    Request.sendRequestJson[MediaQuery](req).flatMap {
       case Response(Some(v), _) => Future successful Right(v)
       case _ => Future successful Left(throw new RuntimeException("getPostsPaging failed"))
     }
@@ -73,4 +74,13 @@ object MediaService extends BaseService {
     }
   }
 
+  def deletePhoto(mediaId: String, shortcode: String, cookies: List[Cookie]): Future[Either[Throwable, Status]] = {
+    val req: Req = ReqUtil.getNaturalReq(Methods.Natural.CREATE_DELETE_PHOTO(mediaId), cookies, isAjax = true)
+      .setMethod("POST")
+      .addHeader("Referer", s"https://www.instagram.com/p/$shortcode/")
+    Request.sendRequestJson[DeletePhoto](req).flatMap {
+      case Response(Some(v), _) => Future successful Right(Status(v.status, None))
+      case _ => Future successful Left(throw new RuntimeException("deletePhoto createConfigure failed"))
+    }
+  }
 }
