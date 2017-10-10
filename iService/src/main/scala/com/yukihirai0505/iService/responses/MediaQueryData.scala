@@ -51,7 +51,7 @@ case class MediaQueryNode(
                            id: String,
                            shortcode: String,
                            thumbnailSrc: String,
-                           takenAtTimestamp: String,
+                           takenAtTimestamp: Long,
                            displayUrl: String,
                            isVideo: Boolean,
                            edgeMediaToCaption: EdgeMediaToCaption,
@@ -65,7 +65,7 @@ object MediaQueryNode {
   implicit val MediaQueryNodeFormat = JsonNaming.snakecase(Json.format[MediaQueryNode])
 }
 
-case class MediaEdges(node: Seq[MediaQueryNode])
+case class MediaEdges(node: MediaQueryNode)
 
 object MediaEdges {
   implicit val MediaEdgesFormat = JsonNaming.snakecase(Json.format[MediaEdges])
@@ -83,13 +83,13 @@ object HashTag {
   implicit val HashTagFormat = JsonNaming.snakecase(Json.format[HashTag])
 }
 
-case class MediaQueryData(hashtag: Seq[HashTag], status: String)
+case class MediaQueryData(hashtag: HashTag)
 
 object MediaQueryData {
   implicit val MediaQueryDataFormat = JsonNaming.snakecase(Json.format[MediaQueryData])
 }
 
-case class MediaQuery(data: MediaQueryData)
+case class MediaQuery(data: MediaQueryData, status: String)
 
 object MediaQuery {
   implicit val MediaQueryFormat = JsonNaming.snakecase(Json.format[MediaQuery])

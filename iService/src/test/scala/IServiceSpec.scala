@@ -1,5 +1,6 @@
 import java.io.File
 
+import com.typesafe.scalalogging.LazyLogging
 import com.yukihirai0505.iService.IService
 import com.yukihirai0505.iService.services.MediaService
 import org.scalatest._
@@ -7,10 +8,11 @@ import org.scalatest._
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-class IServiceSpec extends FlatSpec with Matchers {
+class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
 
   val (username, password) = (sys.env("INSTAGRAM_USERNAME"), sys.env("INSTAGRAM_PASSWORD"))
   val iService = new IService(username, password)
+  val tagName = "like4like"
 
   "iFollower" should "get instagram followers" in {
     import java.io.{FileOutputStream => FileStream, OutputStreamWriter => StreamWriter}
@@ -25,31 +27,49 @@ class IServiceSpec extends FlatSpec with Matchers {
         v.foreach(n => writer.write(s"${n.node.username}\n"))
         v
       case Left(e) =>
-        println("failed", e)
+        logger.warn("failed", e)
         Seq.empty
     }
     writer.close()
     edges.length should be > 0
   }
 
-  "iMedia" should "get hash tag search result" in {
-    val nodes = Await.result(iService.getSearchHashTagResult(hashTag = "like4like"), Duration.Inf) match {
+  "getSearchHashTagResult" should "get hash tag search result" in {
+    val nodes = Await.result(iService.getSearchHashTagResult(hashTag = tagName), Duration.Inf) match {
       case Right(v) =>
-        println(s"hasNextPage: ${v.media.pageInfo.hasNextPage}")
-        println(s"endCursor: ${v.media.pageInfo.endCursor}")
+        logger.info(s"getSearchHashTagResult hasNextPage: ${v.media.pageInfo.hasNextPage}")
+        logger.info(s"getSearchHashTagResult endCursor: ${v.media.pageInfo.endCursor}")
         v.media.nodes
       case Left(e) =>
-        println("failed", e)
+        logger.warn("failed", e)
         Seq.empty
     }
     nodes.length should be > 0
   }
 
-  "iLike" should "like to media" in {
+  "getPostsPaging" should "get hash tag search result paging" in {
+    val nodes = Await.result(iService.getSearchHashTagResult(hashTag = tagName), Duration.Inf) match {
+      case Right(v) =>
+        import scala.concurrent.ExecutionContext.Implicits.global
+        Await.result(MediaService.getPostsPaging(tagName, v.media.pageInfo.endCursor), Duration.Inf) match {
+          case Right(mediaQuery) =>
+            mediaQuery.data.hashtag.edgeHashtagToMedia.edges
+          case Left(e) =>
+            logger.warn("failed", e)
+            Seq.empty
+        }
+      case Left(e) =>
+        logger.warn("failed", e)
+        Seq.empty
+    }
+    nodes.length should be > 0
+  }
+
+  "likeMedia" should "like to media" in {
     val status = Await.result(iService.likeMedia(mediaId = "1611347561905376396", "BZcqBH9D8yM"), Duration.Inf) match {
       case Right(v) => v.status
       case Left(e) =>
-        println("failed", e)
+        logger.warn("failed", e)
         ""
     }
     status shouldEqual "ok"
@@ -58,10 +78,10 @@ class IServiceSpec extends FlatSpec with Matchers {
   "postNaturalWays" should "post photo to instagram" in {
     val status = Await.result(iService.postNaturalWays(new File("../scripts/hoge.jpg"), "投稿テスト"), Duration.Inf) match {
       case Right(v) =>
-        println(s"result:${v.status} code: ${v.code}")
+        logger.info(s"postNaturalWays result:${v.status} code: ${v.code}")
         v.status
       case Left(e) =>
-        println("failed", e)
+        logger.warn("failed", e)
         ""
     }
     status shouldEqual "ok"
@@ -75,7 +95,7 @@ class IServiceSpec extends FlatSpec with Matchers {
         }
         "ok"
       case Left(e) =>
-        println("failed", e)
+        logger.warn("failed", e)
         ""
     }
     status shouldEqual "ok"

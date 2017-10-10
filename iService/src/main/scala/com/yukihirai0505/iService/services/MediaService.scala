@@ -29,6 +29,7 @@ object MediaService extends BaseService {
   def getPostsPaging(tagName: String, afterCode: String)
                     (implicit ec: ExecutionContext): Future[Either[Throwable, MediaQuery]] = {
     val pagingUrl: String = s"${Methods.Natural.HASH_TAG_QUERY(tagName, afterCode)}"
+    logger.info(s"getPostsPaging pagingUrl: $pagingUrl")
     val req: Req = ReqUtil.getNaturalReq(pagingUrl)
     Request.sendRequestJson[MediaQuery](req).flatMap {
       case Response(Some(v), _) => Future successful Right(v)

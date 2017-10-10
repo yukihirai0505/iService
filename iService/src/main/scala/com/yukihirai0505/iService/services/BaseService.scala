@@ -1,5 +1,6 @@
 package com.yukihirai0505.iService.services
 
+import com.typesafe.scalalogging.LazyLogging
 import dispatch.{Http, Req}
 import play.api.libs.json.{JsError, JsSuccess, Json, Reads}
 
@@ -8,7 +9,7 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Created by Yuky on 2017/10/06.
   */
-trait BaseService {
+trait BaseService extends LazyLogging {
 
   def requestWebPage[T](req: Req)(implicit ec: ExecutionContext, r: Reads[T]): Future[T] = {
     Http(req).map { resp =>

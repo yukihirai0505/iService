@@ -24,7 +24,7 @@ class IService(username: String, password: String) extends InstagramUser(usernam
   def getFollowers(targetAccountName: String, queryNum: Int = 20): Future[Either[Throwable, Seq[Edges]]] = {
     def execute(cookies: List[Cookie]) = UserService.getUserInfo(targetAccountName, cookies).flatMap {
       case Right(userData) =>
-        logger.info(s"userId: ${userData.id} followedBy: ${userData.followedBy.count}")
+        logger.info(s"getFollowers userId: ${userData.id} followedBy: ${userData.followedBy.count}")
         val baseUrl: String = s"${Methods.Natural.FOLLOWER_QUERY(queryNum)}&id=${userData.id}"
         getFollower(baseUrl, cookies).flatMap {
           case Right(nodes) => Future successful Right(nodes)
