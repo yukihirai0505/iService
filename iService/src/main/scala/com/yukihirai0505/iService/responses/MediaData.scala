@@ -3,6 +3,8 @@ package com.yukihirai0505.iService.responses
 import com.github.tototoshi.play.json.JsonNaming
 import play.api.libs.json.Json
 
+case class TagError(message: String)
+
 case class TopPosts(nodes: Seq[MediaNode])
 
 object TopPosts {

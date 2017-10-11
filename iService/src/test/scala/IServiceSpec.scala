@@ -2,10 +2,12 @@ import java.io.File
 
 import com.typesafe.scalalogging.LazyLogging
 import com.yukihirai0505.iService.IService
+import com.yukihirai0505.iService.constans.Constants
 import com.yukihirai0505.iService.services.MediaService
 import org.scalatest._
 
 import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
 class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
@@ -35,34 +37,29 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
   }
 
   "getSearchHashTagResult" should "get hash tag search result" in {
-    val nodes = Await.result(iService.getSearchHashTagResult(hashTag = tagName), Duration.Inf) match {
+    Await.result(iService.getSearchHashTagResult(hashTag = tagName), Duration.Inf) match {
       case Right(v) =>
         logger.info(s"getSearchHashTagResult hasNextPage: ${v.media.pageInfo.hasNextPage}")
         logger.info(s"getSearchHashTagResult endCursor: ${v.media.pageInfo.endCursor}")
-        v.media.nodes
+        v.media.nodes.length should be > 0
       case Left(e) =>
-        logger.warn("failed", e)
-        Seq.empty
+        e.getMessage shouldEqual Constants.NOT_FOUND_ERROR_MESSAGE
     }
-    nodes.length should be > 0
   }
 
   "getPostsPaging" should "get hash tag search result paging" in {
-    val nodes = Await.result(iService.getSearchHashTagResult(hashTag = tagName), Duration.Inf) match {
+    Await.result(MediaService.getPosts(hashTag = tagName), Duration.Inf) match {
       case Right(v) =>
-        import scala.concurrent.ExecutionContext.Implicits.global
         Await.result(MediaService.getPostsPaging(tagName, v.media.pageInfo.endCursor), Duration.Inf) match {
           case Right(mediaQuery) =>
-            mediaQuery.data.hashtag.edgeHashtagToMedia.edges
+            mediaQuery.data.hashtag.edgeHashtagToMedia.edges.length should be > 0
           case Left(e) =>
             logger.warn("failed", e)
-            Seq.empty
         }
       case Left(e) =>
-        logger.warn("failed", e)
-        Seq.empty
+        logger.info(e.message)
+        e.message.contains("baned") shouldEqual true
     }
-    nodes.length should be > 0
   }
 
   "likeMedia" should "like to media" in {

@@ -7,7 +7,7 @@ import com.ning.http.client.cookie.Cookie
 import com.ning.http.client.multipart.{FilePart, StringPart}
 import com.yukihirai0505.com.scala.Request
 import com.yukihirai0505.com.scala.model.Response
-import com.yukihirai0505.iService.constans.{ContentType, Methods}
+import com.yukihirai0505.iService.constans.{Constants, ContentType, Methods}
 import com.yukihirai0505.iService.responses._
 import com.yukihirai0505.iService.utils.{NumberUtil, ReqUtil}
 import dispatch.Req
@@ -19,11 +19,16 @@ import scala.concurrent.{ExecutionContext, Future}
   */
 object MediaService extends BaseService {
 
-  def getPosts(hashTag: String, cookies: List[Cookie])
-              (implicit ec: ExecutionContext): Future[Tag] = {
+  def getPosts(hashTag: String, cookies: List[Cookie] = List.empty)
+              (implicit ec: ExecutionContext): Future[Either[TagError, Tag]] = {
     val hashTagUrl: String = s"${Methods.Natural.HASH_TAG_URL(URLEncoder.encode(hashTag, "UTF-8"))}"
     val req: Req = ReqUtil.getNaturalReq(hashTagUrl, cookies).setMethod("GET")
-    requestWebPage[MediaData](req).flatMap(v => Future successful v.entryData.TagPage.head.tag)
+    requestWebPage[MediaData](req).flatMap {
+      case Right(v) => Future successful Right(v.entryData.TagPage.head.tag)
+      case Left(e) => if (e.getMessage.equals(Constants.NOT_FOUND_ERROR_MESSAGE)) {
+        Future successful Left(TagError(s"$hashTag is baned by instagram"))
+      } else Future successful Left(TagError(e.getMessage))
+    }
   }
 
   def getPostsPaging(tagName: String, afterCode: String)

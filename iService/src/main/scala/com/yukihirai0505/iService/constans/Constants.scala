@@ -9,4 +9,6 @@ object Constants {
   val HASH_HMAC_KEY: String = "b4a23f5e39b5929e0666ac5de94c89d1618a2916"
   val UTF8: String = "UTF-8"
   val HMAC_SHA256: String = "HmacSHA256"
+
+  val NOT_FOUND_ERROR_MESSAGE = "404: NotFound"
 }
