@@ -3,7 +3,7 @@ import java.io.File
 import com.typesafe.scalalogging.LazyLogging
 import com.yukihirai0505.iService.IService
 import com.yukihirai0505.iService.constans.Constants
-import com.yukihirai0505.iService.services.MediaService
+import com.yukihirai0505.iService.services.{MediaService, UserService}
 import org.scalatest._
 
 import scala.concurrent.Await
@@ -15,6 +15,7 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
   val (username, password) = (sys.env("INSTAGRAM_USERNAME"), sys.env("INSTAGRAM_PASSWORD"))
   val iService = new IService(username, password)
   val tagName = "like4like"
+  val targetAccountName = "i_do_not_like_fashion"
 
   "iFollower" should "get instagram followers" in {
     import java.io.{FileOutputStream => FileStream, OutputStreamWriter => StreamWriter}
@@ -24,7 +25,7 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
     val fileOutPutStream = new FileStream(fileName, append)
     val writer = new StreamWriter(fileOutPutStream, encode)
     // queryNum has limit (until 9999), but 9999 request will cause error. so it is better to set small number as you can.
-    val edges = Await.result(iService.getFollowers(targetAccountName = "i_do_not_like_fashion"), Duration.Inf) match {
+    val edges = Await.result(iService.getFollowers(targetAccountName = targetAccountName), Duration.Inf) match {
       case Right(v) =>
         v.foreach(n => writer.write(s"${n.node.username}\n"))
         v
@@ -44,21 +45,6 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
         v.media.nodes.length should be > 0
       case Left(e) =>
         e.getMessage shouldEqual Constants.NOT_FOUND_ERROR_MESSAGE
-    }
-  }
-
-  "getPostsPaging" should "get hash tag search result paging" in {
-    Await.result(MediaService.getPosts(hashTag = tagName), Duration.Inf) match {
-      case Right(v) =>
-        Await.result(MediaService.getPostsPaging(tagName, v.media.pageInfo.endCursor), Duration.Inf) match {
-          case Right(mediaQuery) =>
-            mediaQuery.data.hashtag.edgeHashtagToMedia.edges.length should be > 0
-          case Left(e) =>
-            logger.warn("failed", e)
-        }
-      case Left(e) =>
-        logger.info(e.message)
-        e.message.contains("baned") shouldEqual true
     }
   }
 
@@ -96,5 +82,35 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
         ""
     }
     status shouldEqual "ok"
+  }
+
+  "MediaService.getPostsPaging" should "get hash tag search result paging" in {
+    Await.result(MediaService.getPosts(hashTag = tagName), Duration.Inf) match {
+      case Right(v) =>
+        Await.result(MediaService.getPostsPaging(tagName, v.media.pageInfo.endCursor), Duration.Inf) match {
+          case Right(mediaQuery) =>
+            mediaQuery.data.hashtag.edgeHashtagToMedia.edges.length should be > 0
+          case Left(e) =>
+            logger.warn("failed", e)
+        }
+      case Left(e) =>
+        logger.info(e.message)
+        e.message.contains("baned") shouldEqual true
+    }
+  }
+
+  "UserService.getPostsPaging" should "get hash tag search result paging" in {
+    Await.result(UserService.getUserInfo(targetAccountName = targetAccountName), Duration.Inf) match {
+      case Right(v) =>
+        Await.result(UserService.getPostsPaging(v.id, v.media.pageInfo.endCursor), Duration.Inf) match {
+          case Right(postQuery) =>
+            postQuery.data.user.edgeOwnerToTimelineMedia.edges.length should be > 0
+          case Left(e) =>
+            logger.warn("failed", e)
+        }
+      case Left(e) =>
+        logger.info(e.message)
+        e.message.contains("baned") shouldEqual true
+    }
   }
 }

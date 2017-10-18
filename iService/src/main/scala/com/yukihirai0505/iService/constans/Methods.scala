@@ -25,6 +25,8 @@ object Methods {
     val HASH_TAG_URL: (String) => String = (hashTag: String) => s"${TOP}explore/tags/$hashTag/"
     val HASH_TAG_QUERY: (String, String) => String = (tagName: String, afterCode: String) =>
       s"$TOP${GRAPHQL}17875800862117404&&variables=%7B%22tag_name%22%3A%22$tagName%22%2C%22first%22%3A9%2C%22after%22%3A%22$afterCode%22%7D"
+    val ACCOUNT_POST_QUERY: (String, String) => String = (userId: String, afterCode: String) =>
+      s"$TOP${GRAPHQL}17888483320059182&variables=%7B%22id%22%3A%22$userId%22%2C%22first%22%3A12%2C%22after%22%3A%22$afterCode%22%7D"
   }
 
 }

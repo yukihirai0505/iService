@@ -30,6 +30,17 @@ object UserService extends BaseService {
     }
   }
 
+  def getPostsPaging(userId: String, afterCode: String)
+                    (implicit ec: ExecutionContext): Future[Either[Throwable, AccountPostQuery]] = {
+    val pagingUrl: String = s"${Methods.Natural.ACCOUNT_POST_QUERY(userId, afterCode)}"
+    logger.info(s"getPostsPaging pagingUrl: $pagingUrl")
+    val req: Req = ReqUtil.getNaturalReq(pagingUrl)
+    Request.sendRequestJson[AccountPostQuery](req).flatMap {
+      case Response(Some(v), _) => Future successful Right(v)
+      case _ => Future successful Left(throw new RuntimeException("getPostsPaging failed"))
+    }
+  }
+
   def getFollower(baseUrl: String, cookies: List[Cookie], afterCode: Option[String] = None, nodes: Seq[Edges] = Seq.empty)
                  (implicit ec: ExecutionContext): Future[Either[Throwable, Seq[Edges]]] = {
     val apiUrl = afterCode.fold(baseUrl)(code => s"$baseUrl&after=$code")

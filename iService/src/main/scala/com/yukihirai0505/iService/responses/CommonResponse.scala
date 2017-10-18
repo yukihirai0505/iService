@@ -52,3 +52,47 @@ case class Media(nodes: Seq[MediaNode], count: Long, pageInfo: PageInfo)
 object Media {
   implicit val MediaFormat = JsonNaming.snakecase(Json.format[Media])
 }
+
+
+case class TextNode(text: String)
+
+object TextNode {
+  implicit val TextNodeFormat = JsonNaming.snakecase(Json.format[TextNode])
+}
+
+case class CaptionNode(node: TextNode)
+
+object CaptionNode {
+  implicit val CaptionNodeFormat = JsonNaming.snakecase(Json.format[CaptionNode])
+}
+
+case class EdgeMediaToCaption(edges: Seq[CaptionNode])
+
+object EdgeMediaToCaption {
+  implicit val EdgeMediaToCaptionFormat = JsonNaming.snakecase(Json.format[EdgeMediaToCaption])
+}
+
+case class MediaQueryNode(
+                           commentsDisabled: Boolean,
+                           id: String,
+                           shortcode: String,
+                           thumbnailSrc: String,
+                           takenAtTimestamp: Long,
+                           displayUrl: String,
+                           isVideo: Boolean,
+                           edgeMediaToCaption: EdgeMediaToCaption,
+                           edgeMediaToComment: Count,
+                           dimensions: Dimensions,
+                           edgeLikedBy: Count,
+                           owner: Owner
+                         )
+
+object MediaQueryNode {
+  implicit val MediaQueryNodeFormat = JsonNaming.snakecase(Json.format[MediaQueryNode])
+}
+
+case class MediaEdges(node: MediaQueryNode)
+
+object MediaEdges {
+  implicit val MediaEdgesFormat = JsonNaming.snakecase(Json.format[MediaEdges])
+}
