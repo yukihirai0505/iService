@@ -71,28 +71,3 @@ case class EdgeMediaToCaption(edges: Seq[CaptionNode])
 object EdgeMediaToCaption {
   implicit val EdgeMediaToCaptionFormat = JsonNaming.snakecase(Json.format[EdgeMediaToCaption])
 }
-
-case class MediaQueryNode(
-                           commentsDisabled: Boolean,
-                           id: String,
-                           shortcode: String,
-                           thumbnailSrc: String,
-                           takenAtTimestamp: Long,
-                           displayUrl: String,
-                           isVideo: Boolean,
-                           edgeMediaToCaption: EdgeMediaToCaption,
-                           edgeMediaToComment: Count,
-                           dimensions: Dimensions,
-                           edgeLikedBy: Count,
-                           owner: Owner
-                         )
-
-object MediaQueryNode {
-  implicit val MediaQueryNodeFormat = JsonNaming.snakecase(Json.format[MediaQueryNode])
-}
-
-case class MediaEdges(node: MediaQueryNode)
-
-object MediaEdges {
-  implicit val MediaEdgesFormat = JsonNaming.snakecase(Json.format[MediaEdges])
-}
