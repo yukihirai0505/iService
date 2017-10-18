@@ -1,6 +1,6 @@
 name := """iService"""
 
-version := "2.2.2"
+version := "2.2.3"
 
 scalaVersion := "2.11.7"
 
