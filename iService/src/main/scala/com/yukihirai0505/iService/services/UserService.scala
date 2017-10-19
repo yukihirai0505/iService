@@ -50,7 +50,7 @@ object UserService extends BaseService {
         val userData = v.data.user.edgeFollowedBy
         if (userData.pageInfo.hasNextPage)
           getFollower(
-            baseUrl, cookies, Some(userData.pageInfo.endCursor), nodes ++ userData.edges
+            baseUrl, cookies, Some(userData.pageInfo.endCursor.get), nodes ++ userData.edges
           )
         else Future successful Right(nodes ++ userData.edges)
       case _ => Future successful Left(throw new RuntimeException("iFollower failed"))

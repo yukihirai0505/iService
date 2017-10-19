@@ -14,7 +14,7 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
 
   val (username, password) = (sys.env("INSTAGRAM_USERNAME"), sys.env("INSTAGRAM_PASSWORD"))
   val iService = new IService(username, password)
-  val tagName = "like4like"
+  val tagName = "idonotlikefashion"
   val targetAccountName = "i_do_not_like_fashion"
 
   "iFollower" should "get instagram followers" in {
@@ -41,7 +41,7 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
     Await.result(iService.getSearchHashTagResult(hashTag = tagName), Duration.Inf) match {
       case Right(v) =>
         logger.info(s"getSearchHashTagResult hasNextPage: ${v.media.pageInfo.hasNextPage}")
-        logger.info(s"getSearchHashTagResult endCursor: ${v.media.pageInfo.endCursor}")
+        logger.info(s"getSearchHashTagResult endCursor: ${v.media.pageInfo.endCursor.getOrElse("nothing")}")
         v.media.nodes.length should be > 0
       case Left(e) =>
         e.getMessage shouldEqual Constants.NOT_FOUND_ERROR_MESSAGE
@@ -87,12 +87,14 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
   "MediaService.getPostsPaging" should "get hash tag search result paging" in {
     Await.result(MediaService.getPosts(hashTag = tagName), Duration.Inf) match {
       case Right(v) =>
-        Await.result(MediaService.getPostsPaging(tagName, v.media.pageInfo.endCursor), Duration.Inf) match {
-          case Right(mediaQuery) =>
-            mediaQuery.data.hashtag.edgeHashtagToMedia.edges.length should be > 0
-          case Left(e) =>
-            logger.warn("failed", e)
-        }
+        if (v.media.pageInfo.hasNextPage) {
+          Await.result(MediaService.getPostsPaging(tagName, v.media.pageInfo.endCursor.get), Duration.Inf) match {
+            case Right(mediaQuery) =>
+              mediaQuery.data.hashtag.edgeHashtagToMedia.edges.length should be > 0
+            case Left(e) =>
+              logger.warn("failed", e)
+          }
+        } else logger.info("none next page")
       case Left(e) =>
         logger.info(e.message)
         e.message.contains("baned") shouldEqual true
@@ -102,12 +104,14 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
   "UserService.getPostsPaging" should "get hash tag search result paging" in {
     Await.result(UserService.getUserInfo(targetAccountName = targetAccountName), Duration.Inf) match {
       case Right(v) =>
-        Await.result(UserService.getPostsPaging(v.id, v.media.pageInfo.endCursor), Duration.Inf) match {
-          case Right(postQuery) =>
-            postQuery.data.user.edgeOwnerToTimelineMedia.edges.length should be > 0
-          case Left(e) =>
-            logger.warn("failed", e)
-        }
+        if (v.media.pageInfo.hasNextPage) {
+          Await.result(UserService.getPostsPaging(v.id, v.media.pageInfo.endCursor.get), Duration.Inf) match {
+            case Right(postQuery) =>
+              postQuery.data.user.edgeOwnerToTimelineMedia.edges.length should be > 0
+            case Left(e) =>
+              logger.warn("failed", e)
+          }
+        } else logger.info("none next page")
       case Left(e) =>
         logger.info(e.message)
         e.message.contains("baned") shouldEqual true
