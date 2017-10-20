@@ -47,7 +47,7 @@ object EdgeMediaToTaggedUserNode {
 }
 
 
-case class EdgeMediaToTaggedUserEdge(node: EdgeMediaToTaggedUserNodeUser)
+case class EdgeMediaToTaggedUserEdge(node: EdgeMediaToTaggedUserNode)
 
 object EdgeMediaToTaggedUserEdge {
   implicit val EdgeMediaToTaggedUserEdgeFormat = JsonNaming.snakecase(Json.format[EdgeMediaToTaggedUserEdge])
