@@ -3,8 +3,6 @@ package com.yukihirai0505.iService.responses
 import com.github.tototoshi.play.json.JsonNaming
 import play.api.libs.json.Json
 
-case class UserError(message: String)
-
 case class FollowedBy(count: Long)
 
 object FollowedBy {

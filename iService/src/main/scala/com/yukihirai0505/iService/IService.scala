@@ -18,7 +18,7 @@ class IService(username: String, password: String)
   def getUserInfo(targetAccountName: String): Future[Either[Throwable, ProfileUserData]] = {
     def execute(cookies: List[Cookie]) = UserService.getUserInfo(targetAccountName, cookies).flatMap {
       case Right(v) => Future successful Right(v)
-      case Left(e) => Future successful Left(new Exception(e.message))
+      case Left(e) => Future successful Left(e)
     }
 
     commonAction(execute)
@@ -35,7 +35,7 @@ class IService(username: String, password: String)
             case Left(e) => Future successful Left(e)
           }
         } else Future successful Right(Seq.empty)
-      case Left(e) => Future successful Left(new Exception(e.message))
+      case Left(e) => Future successful Left(e)
     }
 
     commonAction(execute)
@@ -44,7 +44,7 @@ class IService(username: String, password: String)
   def getSearchHashTagResult(hashTag: String): Future[Either[Throwable, Tag]] = {
     def execute(cookies: List[Cookie]) = MediaService.getPosts(hashTag, cookies).flatMap {
       case Right(tag) => Future successful Right(tag)
-      case Left(e) => Future successful Left(new Exception(e.message))
+      case Left(e) => Future successful Left(e)
     }
 
     commonAction(execute)

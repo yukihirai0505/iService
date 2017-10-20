@@ -96,8 +96,8 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
           }
         } else logger.info("none next page")
       case Left(e) =>
-        logger.info(e.message)
-        e.message.contains("baned") shouldEqual true
+        logger.info(e.getMessage)
+        e.getMessage.contains("baned") shouldEqual true
     }
   }
 
@@ -113,8 +113,8 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
           }
         } else logger.info("none next page")
       case Left(e) =>
-        logger.info(e.message)
-        e.message.contains("baned") shouldEqual true
+        logger.info(e.getMessage)
+        e.getMessage.contains("baned") shouldEqual true
     }
   }
 
@@ -133,8 +133,8 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
           }
         } else logger.info("none next page")
       case Left(e) =>
-        logger.info(e.message)
-        e.message.contains("baned") shouldEqual true
+        logger.info(e.getMessage)
+        e.getMessage.contains("baned") shouldEqual true
     }
   }
 }

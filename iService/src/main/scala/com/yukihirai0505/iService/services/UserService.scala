@@ -15,7 +15,7 @@ import scala.concurrent.{ExecutionContext, Future}
   */
 object UserService extends BaseService {
   def getUserInfo(targetAccountName: String, cookies: List[Cookie] = List.empty)
-                 (implicit ec: ExecutionContext): Future[Either[UserError, ProfileUserData]] = {
+                 (implicit ec: ExecutionContext): Future[Either[Throwable, ProfileUserData]] = {
     val baseUrl = Methods.Natural.USER_URL format targetAccountName
     val req: Req = ReqUtil.getNaturalReq(baseUrl, cookies)
     requestWebPage[UserData](req).flatMap {
@@ -25,8 +25,8 @@ object UserService extends BaseService {
           case None => Future successful Left(throw new RuntimeException("no user data"))
         }
       case Left(e) => if (e.getMessage.equals(Constants.NOT_FOUND_ERROR_MESSAGE)) {
-        Future successful Left(UserError(s"$targetAccountName is cannot view"))
-      } else Future successful Left(UserError(e.getMessage))
+        Future successful Left(throw new Exception(s"$targetAccountName is cannot view"))
+      } else Future successful Left(throw new Exception(e.getMessage))
     }
   }
 

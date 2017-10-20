@@ -20,7 +20,7 @@ import scala.concurrent.{ExecutionContext, Future}
 object MediaService extends BaseService {
 
   def getPostInfo(shortcode: String, cookies: List[Cookie] = List.empty)
-                 (implicit ec: ExecutionContext): Future[Either[UserError, PostPageGraphql]] = {
+                 (implicit ec: ExecutionContext): Future[Either[Throwable, PostPageGraphql]] = {
     val baseUrl = Methods.Natural.MEDIA_URL(shortcode)
     val req: Req = ReqUtil.getNaturalReq(baseUrl, cookies)
     requestWebPage[MediaData](req).flatMap {
@@ -30,20 +30,20 @@ object MediaService extends BaseService {
           case None => Future successful Left(throw new RuntimeException("no post data"))
         }
       case Left(e) => if (e.getMessage.equals(Constants.NOT_FOUND_ERROR_MESSAGE)) {
-        Future successful Left(UserError(s"shortcode: $shortcode is cannot view"))
-      } else Future successful Left(UserError(e.getMessage))
+        Future successful Left(throw new Exception(s"shortcode: $shortcode is cannot view"))
+      } else Future successful Left(throw new Exception(e.getMessage))
     }
   }
 
   def getPosts(hashTag: String, cookies: List[Cookie] = List.empty)
-              (implicit ec: ExecutionContext): Future[Either[TagError, Tag]] = {
+              (implicit ec: ExecutionContext): Future[Either[Throwable, Tag]] = {
     val hashTagUrl: String = s"${Methods.Natural.HASH_TAG_URL(URLEncoder.encode(hashTag, "UTF-8"))}"
     val req: Req = ReqUtil.getNaturalReq(hashTagUrl, cookies).setMethod("GET")
     requestWebPage[HashTagData](req).flatMap {
       case Right(v) => Future successful Right(v.entryData.TagPage.head.tag)
       case Left(e) => if (e.getMessage.equals(Constants.NOT_FOUND_ERROR_MESSAGE)) {
-        Future successful Left(TagError(s"$hashTag is baned by instagram"))
-      } else Future successful Left(TagError(e.getMessage))
+        Future successful Left(throw new Exception(s"$hashTag is baned by instagram"))
+      } else Future successful Left(throw new Exception(e.getMessage))
     }
   }
 
