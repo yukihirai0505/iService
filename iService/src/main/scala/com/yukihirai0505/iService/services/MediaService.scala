@@ -23,7 +23,7 @@ object MediaService extends BaseService {
                  (implicit ec: ExecutionContext): Future[Either[UserError, PostPageGraphql]] = {
     val baseUrl = Methods.Natural.MEDIA_URL(shortcode)
     val req: Req = ReqUtil.getNaturalReq(baseUrl, cookies)
-    requestWebPage[PostData](req).flatMap {
+    requestWebPage[MediaData](req).flatMap {
       case Right(v) =>
         v.entryData.PostPage.headOption match {
           case Some(p) => Future successful Right(p.graphql)
@@ -39,7 +39,7 @@ object MediaService extends BaseService {
               (implicit ec: ExecutionContext): Future[Either[TagError, Tag]] = {
     val hashTagUrl: String = s"${Methods.Natural.HASH_TAG_URL(URLEncoder.encode(hashTag, "UTF-8"))}"
     val req: Req = ReqUtil.getNaturalReq(hashTagUrl, cookies).setMethod("GET")
-    requestWebPage[MediaData](req).flatMap {
+    requestWebPage[HashTagData](req).flatMap {
       case Right(v) => Future successful Right(v.entryData.TagPage.head.tag)
       case Left(e) => if (e.getMessage.equals(Constants.NOT_FOUND_ERROR_MESSAGE)) {
         Future successful Left(TagError(s"$hashTag is baned by instagram"))

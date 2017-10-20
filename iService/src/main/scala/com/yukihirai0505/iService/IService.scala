@@ -24,7 +24,7 @@ class IService(username: String, password: String)
     commonAction(execute)
   }
 
-  def getFollowers(targetAccountName: String, queryNum: Int = 20): Future[Either[Throwable, Seq[Edges]]] = {
+  def getFollowers(targetAccountName: String, queryNum: Int = 20): Future[Either[Throwable, Seq[EdgeFollowedByEdge]]] = {
     def execute(cookies: List[Cookie]) = UserService.getUserInfo(targetAccountName, cookies).flatMap {
       case Right(userData) =>
         logger.info(s"getFollowers userId: ${userData.id} followedBy: ${userData.followedBy.count}")

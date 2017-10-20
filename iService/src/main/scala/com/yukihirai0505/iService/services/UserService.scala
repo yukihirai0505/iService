@@ -18,7 +18,7 @@ object UserService extends BaseService {
                  (implicit ec: ExecutionContext): Future[Either[UserError, ProfileUserData]] = {
     val baseUrl = Methods.Natural.USER_URL format targetAccountName
     val req: Req = ReqUtil.getNaturalReq(baseUrl, cookies)
-    requestWebPage[AccountData](req).flatMap {
+    requestWebPage[UserData](req).flatMap {
       case Right(v) =>
         v.entryData.ProfilePage.headOption match {
           case Some(p) => Future successful Right(p.user)
@@ -31,22 +31,22 @@ object UserService extends BaseService {
   }
 
   def getPostsPaging(userId: String, size: Int = 12, afterCode: String = "")
-                    (implicit ec: ExecutionContext): Future[Either[Throwable, AccountPostQuery]] = {
+                    (implicit ec: ExecutionContext): Future[Either[Throwable, UserPostQuery]] = {
     val pagingUrl: String = s"${Methods.Graphql.USER_POST_QUERY(userId, size, afterCode)}"
     logger.info(s"getPostsPaging pagingUrl: $pagingUrl")
     val req: Req = ReqUtil.getNaturalReq(pagingUrl)
-    Request.sendRequestJson[AccountPostQuery](req).flatMap {
+    Request.sendRequestJson[UserPostQuery](req).flatMap {
       case Response(Some(v), _) => Future successful Right(v)
       case _ => Future successful Left(throw new RuntimeException("getPostsPaging failed"))
     }
   }
 
-  def getFollower(baseUrl: String, cookies: List[Cookie], afterCode: Option[String] = None, nodes: Seq[Edges] = Seq.empty)
-                 (implicit ec: ExecutionContext): Future[Either[Throwable, Seq[Edges]]] = {
+  def getFollower(baseUrl: String, cookies: List[Cookie], afterCode: Option[String] = None, nodes: Seq[EdgeFollowedByEdge] = Seq.empty)
+                 (implicit ec: ExecutionContext): Future[Either[Throwable, Seq[EdgeFollowedByEdge]]] = {
     val apiUrl = afterCode.fold(baseUrl)(code => s"$baseUrl&after=$code")
     logger.info(s"getFollower url: $apiUrl")
     val req: Req = ReqUtil.getNaturalReq(apiUrl, cookies).setMethod("GET")
-    Request.sendRequestJson[FollowerData](req).flatMap {
+    Request.sendRequestJson[UserFollowerQuery](req).flatMap {
       case Response(Some(v), _) =>
         val userData = v.data.user.edgeFollowedBy
         if (userData.pageInfo.hasNextPage)

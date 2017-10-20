@@ -101,3 +101,12 @@ case class EdgeMediaToComment(count: Long, pageInfo: PageInfo, edges: Seq[Commen
 object EdgeMediaToComment {
   implicit val EdgeMediaToCommentFormat = JsonNaming.snakecase(Json.format[EdgeMediaToComment])
 }
+
+case class Status(status: String, code: Option[String])
+
+import com.github.tototoshi.play.json.JsonNaming
+import play.api.libs.json.Json
+
+object Status {
+  implicit val StatusFormat = JsonNaming.snakecase(Json.format[Status])
+}

@@ -4,7 +4,7 @@ package com.yukihirai0505.iService.responses
 import com.github.tototoshi.play.json.JsonNaming
 import play.api.libs.json.Json
 
-case class UserPostQueryNode(
+case class UserPostEdgesNode(
                            commentsDisabled: Boolean,
                            id: String,
                            shortcode: String,
@@ -19,11 +19,11 @@ case class UserPostQueryNode(
                            owner: Owner
                          )
 
-object UserPostQueryNode {
-  implicit val UserPostQueryNodeFormat = JsonNaming.snakecase(Json.format[UserPostQueryNode])
+object UserPostEdgesNode {
+  implicit val UserPostEdgesNodeFormat = JsonNaming.snakecase(Json.format[UserPostEdgesNode])
 }
 
-case class UserPostEdges(node: UserPostQueryNode)
+case class UserPostEdges(node: UserPostEdgesNode)
 
 object UserPostEdges {
   implicit val UserPostEdgesFormat = JsonNaming.snakecase(Json.format[UserPostEdges])
@@ -41,14 +41,14 @@ object PostQueryUserData {
   implicit val PostQueryUserDataFormat = JsonNaming.snakecase(Json.format[PostQueryUserData])
 }
 
-case class AccountPostQueryData(user: PostQueryUserData)
+case class UserPostQueryData(user: PostQueryUserData)
 
-object AccountPostQueryData {
-  implicit val AccountPostQueryDataFormat = JsonNaming.snakecase(Json.format[AccountPostQueryData])
+object UserPostQueryData {
+  implicit val UserPostQueryDataFormat = JsonNaming.snakecase(Json.format[UserPostQueryData])
 }
 
-case class AccountPostQuery(data: AccountPostQueryData, status: String)
+case class UserPostQuery(data: UserPostQueryData, status: String)
 
-object AccountPostQuery {
-  implicit val AccountPostQueryFormat = JsonNaming.snakecase(Json.format[AccountPostQuery])
+object UserPostQuery {
+  implicit val UserPostQueryFormat = JsonNaming.snakecase(Json.format[UserPostQuery])
 }

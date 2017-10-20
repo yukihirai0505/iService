@@ -23,14 +23,14 @@ object ProfilePage {
   implicit val ProfilePageFormat = JsonNaming.snakecase(Json.format[ProfilePage])
 }
 
-case class AccountEntryData(ProfilePage: Seq[ProfilePage])
+case class UserEntryData(ProfilePage: Seq[ProfilePage])
 
-object AccountEntryData {
-  implicit val AccountEntryDataFormat = JsonNaming.snakecase(Json.format[AccountEntryData])
+object UserEntryData {
+  implicit val UserEntryDataFormat = JsonNaming.snakecase(Json.format[UserEntryData])
 }
 
-case class AccountData(entryData: AccountEntryData)
+case class UserData(entryData: UserEntryData)
 
-object AccountData {
-  implicit val AccountDataFormat = JsonNaming.snakecase(Json.format[AccountData])
+object UserData {
+  implicit val UserDataFormat = JsonNaming.snakecase(Json.format[UserData])
 }
