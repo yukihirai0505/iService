@@ -19,6 +19,22 @@ import scala.concurrent.{ExecutionContext, Future}
   */
 object MediaService extends BaseService {
 
+  def getPostInfo(shortcode: String, cookies: List[Cookie] = List.empty)
+                 (implicit ec: ExecutionContext): Future[Either[UserError, PostPageGraphql]] = {
+    val baseUrl = Methods.Natural.MEDIA_URL(shortcode)
+    val req: Req = ReqUtil.getNaturalReq(baseUrl, cookies)
+    requestWebPage[PostData](req).flatMap {
+      case Right(v) =>
+        v.entryData.PostPage.headOption match {
+          case Some(p) => Future successful Right(p.graphql)
+          case None => Future successful Left(throw new RuntimeException("no post data"))
+        }
+      case Left(e) => if (e.getMessage.equals(Constants.NOT_FOUND_ERROR_MESSAGE)) {
+        Future successful Left(UserError(s"shortcode: $shortcode is cannot view"))
+      } else Future successful Left(UserError(e.getMessage))
+    }
+  }
+
   def getPosts(hashTag: String, cookies: List[Cookie] = List.empty)
               (implicit ec: ExecutionContext): Future[Either[TagError, Tag]] = {
     val hashTagUrl: String = s"${Methods.Natural.HASH_TAG_URL(URLEncoder.encode(hashTag, "UTF-8"))}"
@@ -31,9 +47,9 @@ object MediaService extends BaseService {
     }
   }
 
-  def getPostsPaging(tagName: String, afterCode: String)
+  def getPostsPaging(tagName: String, size: Int = 9, afterCode: String = "")
                     (implicit ec: ExecutionContext): Future[Either[Throwable, MediaQuery]] = {
-    val pagingUrl: String = s"${Methods.Natural.HASH_TAG_QUERY(tagName, afterCode)}"
+    val pagingUrl: String = s"${Methods.Graphql.HASH_TAG_QUERY(tagName, size, afterCode)}"
     logger.info(s"getPostsPaging pagingUrl: $pagingUrl")
     val req: Req = ReqUtil.getNaturalReq(pagingUrl)
     Request.sendRequestJson[MediaQuery](req).flatMap {

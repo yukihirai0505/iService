@@ -16,7 +16,7 @@ import scala.concurrent.{ExecutionContext, Future}
 object UserService extends BaseService {
   def getUserInfo(targetAccountName: String, cookies: List[Cookie] = List.empty)
                  (implicit ec: ExecutionContext): Future[Either[UserError, ProfileUserData]] = {
-    val baseUrl = Methods.Natural.ACCOUNT_URL format targetAccountName
+    val baseUrl = Methods.Natural.USER_URL format targetAccountName
     val req: Req = ReqUtil.getNaturalReq(baseUrl, cookies)
     requestWebPage[AccountData](req).flatMap {
       case Right(v) =>
@@ -30,9 +30,9 @@ object UserService extends BaseService {
     }
   }
 
-  def getPostsPaging(userId: String, afterCode: String)
+  def getPostsPaging(userId: String, size: Int = 12, afterCode: String = "")
                     (implicit ec: ExecutionContext): Future[Either[Throwable, AccountPostQuery]] = {
-    val pagingUrl: String = s"${Methods.Natural.ACCOUNT_POST_QUERY(userId, afterCode)}"
+    val pagingUrl: String = s"${Methods.Graphql.USER_POST_QUERY(userId, size, afterCode)}"
     logger.info(s"getPostsPaging pagingUrl: $pagingUrl")
     val req: Req = ReqUtil.getNaturalReq(pagingUrl)
     Request.sendRequestJson[AccountPostQuery](req).flatMap {
@@ -44,6 +44,7 @@ object UserService extends BaseService {
   def getFollower(baseUrl: String, cookies: List[Cookie], afterCode: Option[String] = None, nodes: Seq[Edges] = Seq.empty)
                  (implicit ec: ExecutionContext): Future[Either[Throwable, Seq[Edges]]] = {
     val apiUrl = afterCode.fold(baseUrl)(code => s"$baseUrl&after=$code")
+    logger.info(s"getFollower url: $apiUrl")
     val req: Req = ReqUtil.getNaturalReq(apiUrl, cookies).setMethod("GET")
     Request.sendRequestJson[FollowerData](req).flatMap {
       case Response(Some(v), _) =>

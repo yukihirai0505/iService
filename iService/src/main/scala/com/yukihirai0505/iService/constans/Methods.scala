@@ -13,20 +13,44 @@ object Methods {
   }
 
   object Natural {
-    private val GRAPHQL = "graphql/query/?query_id="
     val TOP = "https://www.instagram.com/"
+    // Login
     val ACCOUNTS_LOGIN_AJAX = s"${TOP}accounts/login/ajax/"
     val CREATE_UPLOAD_PHOTO = s"${TOP}create/upload/photo/"
     val CREATE_CONFIGURE = s"${TOP}create/configure/"
     val CREATE_DELETE_PHOTO: (String) => String = (mediaId: String) => s"${TOP}create/$mediaId/delete/"
-    val FOLLOWER_QUERY: (Int) => String = (queryNum: Int) => s"$TOP${GRAPHQL}17851374694183129&first=$queryNum"
+
+    // Like
     val WEB_LIKES_LIKE: (String) => String = (mediaId: String) => s"${TOP}web/likes/$mediaId/like/"
-    val ACCOUNT_URL = s"$TOP%s/"
+
+    // User
+    val USER_URL = s"$TOP%s/"
+
+    // HashTag
     val HASH_TAG_URL: (String) => String = (hashTag: String) => s"${TOP}explore/tags/$hashTag/"
-    val HASH_TAG_QUERY: (String, String) => String = (tagName: String, afterCode: String) =>
-      s"$TOP${GRAPHQL}17875800862117404&&variables=%7B%22tag_name%22%3A%22$tagName%22%2C%22first%22%3A9%2C%22after%22%3A%22$afterCode%22%7D"
-    val ACCOUNT_POST_QUERY: (String, String) => String = (userId: String, afterCode: String) =>
-      s"$TOP${GRAPHQL}17888483320059182&variables=%7B%22id%22%3A%22$userId%22%2C%22first%22%3A12%2C%22after%22%3A%22$afterCode%22%7D"
+
+    // Media
+    val MEDIA_URL: (String) => String = (shortcode: String) => s"${TOP}p/$shortcode/"
+
+  }
+
+  object Graphql {
+    private val GRAPHQL = s"${Natural.TOP}graphql/query/?query_id="
+    // memo: if afterCode is empty string, the return object is first result.
+
+    // User
+    val USER_FOLLOWER_QUERY: (Int) => String = (size: Int) =>
+      s"${GRAPHQL}17851374694183129&first=$size"
+    val USER_POST_QUERY: (String, Int, String) => String = (userId: String, size: Int, afterCode: String) =>
+      s"${GRAPHQL}17888483320059182&variables=%7B%22id%22%3A%22$userId%22%2C%22first%22%3A$size%2C%22after%22%3A%22$afterCode%22%7D"
+
+    // HashTag
+    val HASH_TAG_QUERY: (String, Int, String) => String = (tagName: String, size: Int, afterCode: String) =>
+      s"${GRAPHQL}17875800862117404&&variables=%7B%22tag_name%22%3A%22$tagName%22%2C%22first%22%3A$size%2C%22after%22%3A%22$afterCode%22%7D"
+
+    // Media
+    val MEDIA_COMMENTS_QUERY: (String, Int, String) => String = (shortcode: String, size: Int, afterCode: String) =>
+      s"${GRAPHQL}17852405266163336&variables=%7B%22shortcode%22%3A%22$shortcode%22%2C%22first%22%3A$size%2C%22after%22%3A%22$afterCode%22%7D"
   }
 
 }

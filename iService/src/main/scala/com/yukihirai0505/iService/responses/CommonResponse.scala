@@ -71,3 +71,33 @@ case class EdgeMediaToCaption(edges: Seq[CaptionNode])
 object EdgeMediaToCaption {
   implicit val EdgeMediaToCaptionFormat = JsonNaming.snakecase(Json.format[EdgeMediaToCaption])
 }
+
+
+case class CommentOwner(id: String, profilePicUrl: String, username: String)
+
+object CommentOwner {
+  implicit val CommentOwnerFormat = JsonNaming.snakecase(Json.format[CommentOwner])
+}
+
+case class CommentEdgesNode(
+                             id: String,
+                             text: String,
+                             createdAt: Long,
+                             owner: CommentOwner
+                           )
+
+object CommentEdgesNode {
+  implicit val CommentEdgesNodeFormat = JsonNaming.snakecase(Json.format[CommentEdgesNode])
+}
+
+case class CommentEdges(node: CommentEdgesNode)
+
+object CommentEdges {
+  implicit val CommentEdgesFormat = JsonNaming.snakecase(Json.format[CommentEdges])
+}
+
+case class EdgeMediaToComment(count: Long, pageInfo: PageInfo, edges: Seq[CommentEdges])
+
+object EdgeMediaToComment {
+  implicit val EdgeMediaToCommentFormat = JsonNaming.snakecase(Json.format[EdgeMediaToComment])
+}

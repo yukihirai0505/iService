@@ -28,11 +28,13 @@ class IService(username: String, password: String)
     def execute(cookies: List[Cookie]) = UserService.getUserInfo(targetAccountName, cookies).flatMap {
       case Right(userData) =>
         logger.info(s"getFollowers userId: ${userData.id} followedBy: ${userData.followedBy.count}")
-        val baseUrl: String = s"${Methods.Natural.FOLLOWER_QUERY(queryNum)}&id=${userData.id}"
-        getFollower(baseUrl, cookies).flatMap {
-          case Right(nodes) => Future successful Right(nodes)
-          case Left(e) => Future successful Left(e)
-        }
+        val baseUrl: String = s"${Methods.Graphql.USER_FOLLOWER_QUERY(queryNum)}&id=${userData.id}"
+        if (userData.followedBy.count > 0) {
+          getFollower(baseUrl, cookies).flatMap {
+            case Right(nodes) => Future successful Right(nodes)
+            case Left(e) => Future successful Left(e)
+          }
+        } else Future successful Right(Seq.empty)
       case Left(e) => Future successful Left(new Exception(e.message))
     }
 

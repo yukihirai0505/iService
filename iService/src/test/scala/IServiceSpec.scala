@@ -3,7 +3,7 @@ import java.io.File
 import com.typesafe.scalalogging.LazyLogging
 import com.yukihirai0505.iService.IService
 import com.yukihirai0505.iService.constans.Constants
-import com.yukihirai0505.iService.services.{MediaService, UserService}
+import com.yukihirai0505.iService.services.{CommentService, MediaService, UserService}
 import org.scalatest._
 
 import scala.concurrent.Await
@@ -30,11 +30,11 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
         v.foreach(n => writer.write(s"${n.node.username}\n"))
         v
       case Left(e) =>
-        logger.warn("failed", e)
+        logger.warn("iFollower failed", e)
         Seq.empty
     }
     writer.close()
-    edges.length should be > 0
+    edges.length should be >= 0
   }
 
   "getSearchHashTagResult" should "get hash tag search result" in {
@@ -52,7 +52,7 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
     val status = Await.result(iService.likeMedia(mediaId = "1611347561905376396", "BZcqBH9D8yM"), Duration.Inf) match {
       case Right(v) => v.status
       case Left(e) =>
-        logger.warn("failed", e)
+        logger.warn("likeMedia failed", e)
         ""
     }
     status shouldEqual "ok"
@@ -64,7 +64,7 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
         logger.info(s"postNaturalWays result:${v.status} code: ${v.code}")
         v.status
       case Left(e) =>
-        logger.warn("failed", e)
+        logger.warn("postNaturalWays failed", e)
         ""
     }
     status shouldEqual "ok"
@@ -78,7 +78,7 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
         }
         "ok"
       case Left(e) =>
-        logger.warn("failed", e)
+        logger.warn("deletePhotos failed", e)
         ""
     }
     status shouldEqual "ok"
@@ -88,11 +88,11 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
     Await.result(MediaService.getPosts(hashTag = tagName), Duration.Inf) match {
       case Right(v) =>
         if (v.media.pageInfo.hasNextPage) {
-          Await.result(MediaService.getPostsPaging(tagName, v.media.pageInfo.endCursor.get), Duration.Inf) match {
+          Await.result(MediaService.getPostsPaging(tagName, size = 9, v.media.pageInfo.endCursor.get), Duration.Inf) match {
             case Right(mediaQuery) =>
               mediaQuery.data.hashtag.edgeHashtagToMedia.edges.length should be > 0
             case Left(e) =>
-              logger.warn("failed", e)
+              logger.warn("MediaService.getPostsPaging failed", e)
           }
         } else logger.info("none next page")
       case Left(e) =>
@@ -105,11 +105,31 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
     Await.result(UserService.getUserInfo(targetAccountName = targetAccountName), Duration.Inf) match {
       case Right(v) =>
         if (v.media.pageInfo.hasNextPage) {
-          Await.result(UserService.getPostsPaging(v.id, v.media.pageInfo.endCursor.get), Duration.Inf) match {
+          Await.result(UserService.getPostsPaging(v.id, size = 12, v.media.pageInfo.endCursor.get), Duration.Inf) match {
             case Right(postQuery) =>
               postQuery.data.user.edgeOwnerToTimelineMedia.edges.length should be > 0
             case Left(e) =>
-              logger.warn("failed", e)
+              logger.warn("UserService.getPostsPaging failed", e)
+          }
+        } else logger.info("none next page")
+      case Left(e) =>
+        logger.info(e.message)
+        e.message.contains("baned") shouldEqual true
+    }
+  }
+
+  "CommentService.getCommentPaging" should "get hash comment result paging" in {
+    val shortcode = "BadJrFsh8LK"
+    Await.result(MediaService.getPostInfo(shortcode = shortcode), Duration.Inf) match {
+      case Right(v) =>
+        logger.info("comment counts: ", v.shortcodeMedia.edgeMediaToComment.count)
+        val pageInfo = v.shortcodeMedia.edgeMediaToComment.pageInfo
+        if (pageInfo.hasNextPage) {
+          Await.result(CommentService.getCommentsPaging(shortcode, size = 20, pageInfo.endCursor.get), Duration.Inf) match {
+            case Right(commentQuery) =>
+              commentQuery.data.shortcodeMedia.edgeMediaToComment.edges.length should be > 0
+            case Left(e) =>
+              logger.warn("CommentService.getCommentPaging failed", e)
           }
         } else logger.info("none next page")
       case Left(e) =>
