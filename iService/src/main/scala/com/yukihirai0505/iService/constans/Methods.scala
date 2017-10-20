@@ -38,6 +38,10 @@ object Methods {
     private val GRAPHQL = s"${Natural.TOP}graphql/query/?query_id="
     // memo: if afterCode is empty string, the return object is first result.
 
+    // Like
+    val LIKE_QUERY: (String, Int, String) => String = (shortcode: String, size: Int, afterCode: String) =>
+      s"${GRAPHQL}17864450716183058&variables=%7B%22shortcode%22%3A%22$shortcode%22%2C%22first%22%3A$size%2C%22after%22%3A%22$afterCode%22%7D"
+
     // User
     val USER_FOLLOWER_QUERY: (Int) => String = (size: Int) =>
       s"${GRAPHQL}17851374694183129&first=$size"

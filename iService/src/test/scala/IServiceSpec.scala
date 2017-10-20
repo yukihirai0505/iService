@@ -3,7 +3,7 @@ import java.io.File
 import com.typesafe.scalalogging.LazyLogging
 import com.yukihirai0505.iService.IService
 import com.yukihirai0505.iService.constans.Constants
-import com.yukihirai0505.iService.services.{CommentService, MediaService, UserService}
+import com.yukihirai0505.iService.services.{CommentService, LikeService, MediaService, UserService}
 import org.scalatest._
 
 import scala.concurrent.Await
@@ -16,6 +16,7 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
   val iService = new IService(username, password)
   val tagName = "idonotlikefashion"
   val targetAccountName = "i_do_not_like_fashion"
+  val shortcode = "BadJrFsh8LK"
 
   "iFollower" should "get instagram followers" in {
     import java.io.{FileOutputStream => FileStream, OutputStreamWriter => StreamWriter}
@@ -119,7 +120,6 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
   }
 
   "CommentService.getCommentPaging" should "get hash comment result paging" in {
-    val shortcode = "BadJrFsh8LK"
     Await.result(MediaService.getPostInfo(shortcode = shortcode), Duration.Inf) match {
       case Right(v) =>
         logger.info("comment counts: ", v.shortcodeMedia.edgeMediaToComment.count)
@@ -128,6 +128,25 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
           Await.result(CommentService.getCommentsPaging(shortcode, size = 20, pageInfo.endCursor.get), Duration.Inf) match {
             case Right(commentQuery) =>
               commentQuery.data.shortcodeMedia.edgeMediaToComment.edges.length should be > 0
+            case Left(e) =>
+              logger.warn("CommentService.getCommentPaging failed", e)
+          }
+        } else logger.info("none next page")
+      case Left(e) =>
+        logger.info(e.getMessage)
+        e.getMessage.contains("baned") shouldEqual true
+    }
+  }
+
+  "LikeService.getLikePaging" should "get media like paging" in {
+    Await.result(LikeService.getLikePaging(shortcode = shortcode), Duration.Inf) match {
+      case Right(v) =>
+        logger.info("like counts: ", v.edgeLikedBy.count)
+        val pageInfo = v.edgeLikedBy.pageInfo
+        if (pageInfo.hasNextPage) {
+          Await.result(LikeService.getLikePaging(shortcode, size = 20, pageInfo.endCursor.get), Duration.Inf) match {
+            case Right(shortcodeMedia) =>
+              shortcodeMedia.edgeLikedBy.edges.length should be > 0
             case Left(e) =>
               logger.warn("CommentService.getCommentPaging failed", e)
           }
