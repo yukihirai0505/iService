@@ -32,6 +32,8 @@ object Methods {
     // Media
     val MEDIA_URL: (String) => String = (shortcode: String) => s"${TOP}p/$shortcode/"
 
+    // Search
+    val SEARCH_API: (String) => String = (query: String) => s"${TOP}web/search/topsearch/?context=blended&query=$query"
   }
 
   object Graphql {
