@@ -1,6 +1,6 @@
 name := """iService"""
 
-version := "2.4.0"
+version := "2.4.1"
 
 scalaVersion := "2.11.7"
 
@@ -8,7 +8,7 @@ libraryDependencies ++= Seq(
   // Log
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
-  "com.yukihirai0505" % "scala-request-json_2.11" % "1.4",
+  "com.yukihirai0505" % "scala-request-json_2.11" % "2.2",
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
 
