@@ -9,7 +9,6 @@ object FollowedBy {
   implicit val FollowedByFormat = JsonNaming.snakecase(Json.format[FollowedBy])
 }
 
-//case class ProfileUserData(id: String, edgeFollowedBy: FollowedBy, edgeOwnerToTimelineMedia: Media)
 case class ProfileUserData(id: String, edgeFollowedBy: FollowedBy)
 
 object ProfileUserData {

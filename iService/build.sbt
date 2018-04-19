@@ -8,7 +8,11 @@ libraryDependencies ++= Seq(
   // Log
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
-  "com.yukihirai0505" % "scala-request-json_2.11" % "2.2",
+  "com.typesafe.play" % "play-json_2.11" % "2.5.9",
+  "net.databinder.dispatch" %% "dispatch-core" % "0.11.4",
+  "com.netaporter" %% "scala-uri" % "0.4.16",
+  "ai.x" %% "play-json-extensions" % "0.8.0",
+  "com.github.tototoshi" %% "play-json-naming" % "1.1.0",
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
 
