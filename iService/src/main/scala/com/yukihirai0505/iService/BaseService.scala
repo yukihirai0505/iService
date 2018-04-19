@@ -52,7 +52,6 @@ trait BaseService extends LazyLogging {
   def sendRequest(request: Req)(implicit ec: ExecutionContext): Future[String] = {
     Thread.sleep(NumberUtil.getRandomInt())
     Http(request).map { res =>
-      cookies = res.getCookies.toList
       getHttpResponse(res)
     }
   }
@@ -101,7 +100,10 @@ trait BaseService extends LazyLogging {
   }
 
   private def getHttpResponse(res: Res): String = {
-    cookies = res.getCookies.toList
+    val _cookies = res.getCookies.toList
+    if (_cookies.nonEmpty) {
+      cookies = res.getCookies.toList
+    }
     res.getResponseBody
   }
 
