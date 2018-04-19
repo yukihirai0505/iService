@@ -9,13 +9,20 @@ object FollowedBy {
   implicit val FollowedByFormat = JsonNaming.snakecase(Json.format[FollowedBy])
 }
 
-case class ProfileUserData(id: String, followedBy: FollowedBy, media: Media)
+//case class ProfileUserData(id: String, edgeFollowedBy: FollowedBy, edgeOwnerToTimelineMedia: Media)
+case class ProfileUserData(id: String, edgeFollowedBy: FollowedBy)
 
 object ProfileUserData {
   implicit val ProfileUserDataFormat = JsonNaming.snakecase(Json.format[ProfileUserData])
 }
 
-case class ProfilePage(user: ProfileUserData)
+case class ProfilePageGraphql(user: ProfileUserData)
+
+object ProfilePageGraphql {
+  implicit val ProfilePageGraphqlFormat = JsonNaming.snakecase(Json.format[ProfilePageGraphql])
+}
+
+case class ProfilePage(graphql: ProfilePageGraphql)
 
 object ProfilePage {
   implicit val ProfilePageFormat = JsonNaming.snakecase(Json.format[ProfilePage])

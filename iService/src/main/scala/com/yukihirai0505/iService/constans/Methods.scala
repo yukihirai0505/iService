@@ -37,7 +37,7 @@ object Methods {
   }
 
   object Graphql {
-    private val GRAPHQL = s"${Natural.TOP}graphql/query/?query_id="
+    private val GRAPHQL = s"${Natural.TOP}graphql/query/?query_hash="
     // memo: if afterCode is empty string, the return object is first result.
 
     // Like
@@ -45,8 +45,9 @@ object Methods {
       s"${GRAPHQL}17864450716183058&variables=%7B%22shortcode%22%3A%22$shortcode%22%2C%22first%22%3A$size%2C%22after%22%3A%22$afterCode%22%7D"
 
     // User
-    val USER_FOLLOWER_QUERY: (Int) => String = (size: Int) =>
-      s"${GRAPHQL}17851374694183129&first=$size"
+    val USER_FOLLOWER_QUERY: (String, Int, String) => String = (userId: String, size: Int, afterCode: String) =>
+      s"${GRAPHQL}37479f2b8209594dde7facb0d904896a&variables=%7B%22id%22%3A%22$userId%22%2C%22first%22%3A$size%2C%22after%22%3A%22$afterCode%22%7D"
+
     val USER_POST_QUERY: (String, Int, String) => String = (userId: String, size: Int, afterCode: String) =>
       s"${GRAPHQL}17888483320059182&variables=%7B%22id%22%3A%22$userId%22%2C%22first%22%3A$size%2C%22after%22%3A%22$afterCode%22%7D"
 

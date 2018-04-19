@@ -24,13 +24,12 @@ class IService(username: String, password: String)
     commonAction(execute)
   }
 
-  def getFollowers(targetAccountName: String, queryNum: Int = 20): Future[Either[Throwable, Seq[EdgeFollowedByEdge]]] = {
+  def getFollowers(targetAccountName: String, queryNum: Int = 50): Future[Either[Throwable, Seq[EdgeFollowedByEdge]]] = {
     def execute(cookies: List[Cookie]) = UserService.getUserInfo(targetAccountName, cookies).flatMap {
       case Right(userData) =>
-        logger.info(s"getFollowers userId: ${userData.id} followedBy: ${userData.followedBy.count}")
-        val baseUrl: String = s"${Methods.Graphql.USER_FOLLOWER_QUERY(queryNum)}&id=${userData.id}"
-        if (userData.followedBy.count > 0) {
-          getFollower(baseUrl, cookies).flatMap {
+        logger.info(s"getFollowers userId: ${userData.id} followedBy: ${userData.edgeFollowedBy.count}")
+        if (userData.edgeFollowedBy.count > 0) {
+          getFollower(userData.id, queryNum, cookies).flatMap {
             case Right(nodes) => Future successful Right(nodes)
             case Left(e) => Future successful Left(e)
           }

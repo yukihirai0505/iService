@@ -15,7 +15,7 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
   val (username, password) = (sys.env("INSTAGRAM_USERNAME"), sys.env("INSTAGRAM_PASSWORD"))
   val iService = new IService(username, password)
   val tagName = "idonotlikefashion"
-  val targetAccountName = "i_do_not_like_fashion"
+  val targetAccountName = "yabaiwebyasan"
   val shortcode = "BadJrFsh8LK"
 
   "iFollower" should "get instagram followers" in {
@@ -25,8 +25,8 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
     val append = true
     val fileOutPutStream = new FileStream(fileName, append)
     val writer = new StreamWriter(fileOutPutStream, encode)
-    // queryNum has limit (until 9999), but 9999 request will cause error. so it is better to set small number as you can.
-    val edges = Await.result(iService.getFollowers(targetAccountName = targetAccountName, 1000), Duration.Inf) match {
+    // queryNum has limit (until 50),  so it is better to set small number as you can.
+    val edges = Await.result(iService.getFollowers(targetAccountName = targetAccountName), Duration.Inf) match {
       case Right(v) =>
         v.foreach(n => writer.write(s"${n.node.username}\n"))
         v

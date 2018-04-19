@@ -21,7 +21,7 @@ object UserService extends BaseService {
     requestWebPage[UserData](req).flatMap {
       case Right(v) =>
         v.entryData.ProfilePage.headOption match {
-          case Some(p) => Future successful Right(p.user)
+          case Some(p) => Future successful Right(p.graphql.user)
           case None => Future successful Left(throw new RuntimeException("no user data"))
         }
       case Left(e) => if (e.getMessage.equals(Constants.NOT_FOUND_ERROR_MESSAGE)) {
@@ -41,9 +41,9 @@ object UserService extends BaseService {
     }
   }
 
-  def getFollower(baseUrl: String, cookies: List[Cookie], afterCode: Option[String] = None, nodes: Seq[EdgeFollowedByEdge] = Seq.empty)
+  def getFollower(userId: String, queryNum: Int, cookies: List[Cookie], afterCode: String = "", nodes: Seq[EdgeFollowedByEdge] = Seq.empty)
                  (implicit ec: ExecutionContext): Future[Either[Throwable, Seq[EdgeFollowedByEdge]]] = {
-    val apiUrl = afterCode.fold(baseUrl)(code => s"$baseUrl&after=$code")
+    val apiUrl: String = s"${Methods.Graphql.USER_FOLLOWER_QUERY(userId, queryNum, afterCode)}"
     logger.info(s"getFollower url: $apiUrl")
     val req: Req = ReqUtil.getNaturalReq(apiUrl, cookies).setMethod("GET")
     Request.sendRequestJson[UserFollowerQuery](req).flatMap {
@@ -51,7 +51,7 @@ object UserService extends BaseService {
         val userData = v.data.user.edgeFollowedBy
         if (userData.pageInfo.hasNextPage)
           getFollower(
-            baseUrl, cookies, Some(userData.pageInfo.endCursor.get), nodes ++ userData.edges
+            userId, queryNum, cookies, userData.pageInfo.endCursor.get, nodes ++ userData.edges
           )
         else Future successful Right(nodes ++ userData.edges)
       case _ => Future successful Left(throw new RuntimeException("iFollower failed"))
