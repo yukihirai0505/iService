@@ -20,13 +20,13 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
 
   "iFollower" should "get instagram followers" in {
     import java.io.{FileOutputStream => FileStream, OutputStreamWriter => StreamWriter}
-    val fileName = "followers.txt"
+    val fileName = s"${targetAccountName}_followers.txt"
     val encode = "UTF-8"
     val append = true
     val fileOutPutStream = new FileStream(fileName, append)
     val writer = new StreamWriter(fileOutPutStream, encode)
     // queryNum has limit (until 9999), but 9999 request will cause error. so it is better to set small number as you can.
-    val edges = Await.result(iService.getFollowers(targetAccountName = targetAccountName), Duration.Inf) match {
+    val edges = Await.result(iService.getFollowers(targetAccountName = targetAccountName, 1000), Duration.Inf) match {
       case Right(v) =>
         v.foreach(n => writer.write(s"${n.node.username}\n"))
         v
@@ -37,7 +37,7 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
     writer.close()
     edges.length should be >= 0
   }
-
+/*
   "getSearchHashTagResult" should "get hash tag search result" in {
     Await.result(iService.getSearchHashTagResult(hashTag = tagName), Duration.Inf) match {
       case Right(v) =>
@@ -156,4 +156,5 @@ class IServiceSpec extends FlatSpec with Matchers with LazyLogging {
         e.getMessage.contains("baned") shouldEqual true
     }
   }
+  */
 }
